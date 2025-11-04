@@ -50,11 +50,18 @@ export async function fetchWithAuth(
   const fullUrl = url.startsWith('http') ? url : `${SUPABASE_URL}${url}`;
 
   // 공통 헤더 구성 (fetchOptions.headers를 먼저 펼치고, 기본 헤더로 덮어씀)
-  const headers: HeadersInit = {
-    ...fetchOptions.headers,
+  const headers: Record<string, string> = {
     'apikey': SUPABASE_ANON_KEY,
     'Content-Type': 'application/json',
   };
+
+  // 기존 헤더 병합
+  if (fetchOptions.headers) {
+    const existingHeaders = new Headers(fetchOptions.headers);
+    existingHeaders.forEach((value, key) => {
+      headers[key] = value;
+    });
+  }
 
   // localStorage에서 accessToken 자동 획득
   const accessToken = getAccessToken();
