@@ -1,0 +1,673 @@
+===============================================
+바나나 중고컴퓨터 프로젝트 - 작업 진행상황 기록
+최종 업데이트: 2025-11-02
+===============================================
+
+## 📋 프로젝트 개요
+
+프로젝트명: 바나나 중고컴퓨터 - 도매 매칭 플랫폼
+기술 스택: Next.js 14.2 (App Router) + TypeScript + Supabase (PostgreSQL, Auth, Storage)
+상태 관리: React Hooks + Context API
+개발 상태: 인증 시스템 100% 완료 + 관리자 대시보드 100% 완료
+
+Supabase 프로젝트 정보:
+- 프로젝트 URL: https://vqypnenjejbtvvvewxee.supabase.co
+- 데이터베이스: PostgreSQL (RLS 활성화)
+- Storage Buckets: business-registrations, product-images, sell-request-images
+- 인증 시스템: Supabase Auth (이메일 확인 필수)
+
+마이그레이션 히스토리:
+- 2025-11-01: Flutter Web (Firebase) → Next.js (Supabase) 마이그레이션 시작
+- 2025-11-02: 인증 시스템, 사업자 인증, 관리자 대시보드 완료
+
+===============================================
+## ✅ 구현 완료된 기능 (2025-11-02 최신)
+===============================================
+
+### 1. 인증 시스템 ✅ (100% 완료)
+- ✅ 로그인/회원가입 (app/(auth)/login/page.tsx, signup/page.tsx)
+- ✅ 비밀번호 재설정 (Supabase Auth 이메일)
+- ✅ 이메일 확인 필수 (Supabase Auth)
+- ✅ 사용자 타입 구분 (일반 사용자, 도매상, 관리자)
+- ✅ Custom Hook을 통한 전역 인증 상태 관리 (lib/hooks/use-auth.ts)
+- ✅ 이메일 확인 콜백 처리 (app/auth/callback/route.ts)
+
+### 2. 데이터 모델 (types/)
+- ✅ types/user.ts - 사용자 정보 및 인증 상태
+  - UserType: NORMAL, WHOLESALER, ADMIN
+  - VerificationStatus: NONE, PENDING, APPROVED, REJECTED
+- ⏳ types/product.ts - 상품 정보 (대기)
+- ⏳ types/inquiry.ts - 문의 정보 (대기)
+- ⏳ types/sell-request.ts - 매입 요청 정보 (대기)
+- ⏳ types/purchase-offer.ts - 매입 제안 정보 (대기)
+
+### 3. 사업자 인증 시스템 ✅ (100% 완료)
+- ✅ 회원가입 시 사업자 등록증 업로드 (components/auth/signup-form.tsx)
+  - Server-side API route로 파일 업로드 (/api/upload-business-registration)
+  - Service Role Key로 RLS 우회
+  - 파일명 형식: {userId}/{userId}_{timestamp}.{ext}
+- ✅ 이메일 확인 후 자동 DB 업데이트 (app/auth/callback/route.ts)
+  - Storage에서 파일 확인
+  - business_registration_url 자동 저장
+  - verification_status를 'pending'으로 자동 변경
+- ✅ 관리자 승인/거부 시스템 (app/(main)/admin/dashboard/page.tsx)
+  - 승인: verification_status = 'approved'
+  - 거부: verification_status = 'rejected', user_type = 'normal'
+- ✅ 사업자 등록증 미리보기/다운로드 기능
+  - PDF와 이미지 모두 지원
+  - iframe으로 PDF 표시
+  - 다운로드 버튼 제공
+
+### 4. 관리자 기능 ✅ (100% 완료)
+- ✅ 관리자 대시보드 (app/(main)/admin/dashboard/page.tsx)
+  - 승인 대기 중인 도매상 목록
+  - 승인/거부 처리
+  - 사업자 등록증 미리보기/다운로드
+  - 실시간 데이터 업데이트
+
+### 5. 백엔드 서비스 (lib/services/)
+- ✅ auth.service.ts - 회원가입, 로그인, 로그아웃
+  - Supabase Auth 연동
+  - fetch API 사용 (Supabase 클라이언트 hanging 문제 회피)
+  - localStorage 기반 세션 관리
+- ✅ admin.service.ts - 관리자 기능
+  - localStorage에서 직접 세션 토큰 읽기
+  - fetch API로 PostgreSQL REST API 호출
+  - getPendingWholesalers(), approveWholesaler(), rejectWholesaler()
+- ✅ storage.service.ts - 파일 업로드
+  - uploadBusinessRegistration() - API route 호출
+  - validateFile() - 파일 유효성 검사
+  - uploadImage(), uploadImages() - 상품/매입 요청 이미지 (대기)
+- ⏳ product.service.ts - 상품 CRUD (대기)
+- ⏳ inquiry.service.ts - 문의 작성, 답변, 조회 (대기)
+- ⏳ sell-request.service.ts - 매입 요청/제안 관리 (대기)
+
+### 6. Database 설정 ✅
+- ✅ Database Trigger (handle_new_user)
+  - Auth 가입 시 users 테이블 자동 생성
+  - user_metadata에서 name, user_type 추출
+  - verification_status 기본값: 'none'
+- ✅ PostgreSQL Tables
+  - users (uid PK, email, name, phone_number, business_registration_url, user_type, verification_status, created_at, updated_at)
+  - products (대기)
+  - inquiries (대기)
+  - sell_requests (대기)
+  - purchase_offers (대기)
+- ✅ RLS 정책
+  - users: 임시로 DISABLE (개발 중)
+  - is_admin() 함수: SECURITY DEFINER, SET search_path, STABLE
+  - Storage: public read/write 허용 (business-registrations)
+
+### 7. Storage 설정 ✅
+- ✅ business-registrations 버킷
+  - 공개 읽기 허용
+  - 공개 업로드 허용 (회원가입 시 필요)
+  - 파일 경로: {userId}/{userId}_{timestamp}.{ext}
+- ⏳ product-images 버킷 (대기)
+- ⏳ sell-request-images 버킷 (대기)
+
+===============================================
+## 🔧 해결된 주요 문제들
+===============================================
+
+### 문제 1: Supabase 클라이언트 Hanging 문제 ⚠️ (CRITICAL)
+증상:
+- `supabase.auth.getSession()` 무한 대기
+- `supabase.from('users').select()` 무한 대기
+- 관리자 대시보드 로딩 무한 대기
+
+원인:
+- RLS 정책과 Supabase 클라이언트 SDK의 충돌로 추정
+- 특히 `is_admin()` 함수와의 재귀 호출 문제
+
+해결책:
+```typescript
+// ❌ 안 됨 - Supabase 클라이언트 사용
+const { data } = await supabase.auth.getSession();
+const { data } = await supabase.from('users').select('*');
+
+// ✅ 작동 - localStorage + fetch API 사용
+// 1. localStorage에서 직접 세션 토큰 읽기
+const keys = Object.keys(localStorage);
+const authKey = keys.find(key =>
+  key.startsWith('sb-') && key.includes('-auth-token')
+);
+const authData = localStorage.getItem(authKey);
+const parsed = JSON.parse(authData);
+const sessionToken = parsed?.access_token;
+
+// 2. fetch API로 직접 호출
+const url = `${SUPABASE_URL}/rest/v1/users`;
+const response = await fetch(url, {
+  headers: {
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': `Bearer ${sessionToken}`,
+    'Content-Type': 'application/json',
+  },
+});
+```
+
+적용 파일:
+- lib/services/admin.service.ts (getSessionToken 메서드)
+- lib/services/auth.service.ts (signIn, getCurrentUser)
+- app/auth/callback/route.ts (이메일 확인 후 처리)
+
+### 문제 2: RLS 무한 재귀 문제
+증상: `is_admin()` 함수 호출 시 무한 재귀 발생
+
+해결책:
+```sql
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER          -- 함수 소유자 권한으로 실행
+SET search_path = public  -- 스키마 고정
+STABLE                    -- 같은 트랜잭션에서 캐시
+AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.users
+    WHERE uid = auth.uid()
+    AND user_type = 'admin'
+  );
+END;
+$$;
+
+ALTER FUNCTION public.is_admin() OWNER TO postgres;
+```
+
+### 문제 3: 이메일 확인 전 DB 업데이트 실패
+증상:
+- 회원가입 시 phone_number 등이 DB에 저장되지 않음
+- UPDATE 시 권한 에러
+
+원인:
+- Supabase Auth는 이메일 확인 전에는 세션을 생성하지 않음
+- 세션 없이는 RLS에 의해 차단됨
+
+해결책:
+```typescript
+// lib/services/auth.service.ts
+// 이메일 확인이 필요한지 먼저 체크 (UPDATE 전에)
+if (!authData.session) {
+  console.log('[AuthService] Email confirmation required - skipping UPDATE');
+  const error = new Error('이메일 확인이 필요합니다...');
+  (error as any).code = 'EMAIL_CONFIRMATION_REQUIRED';
+  throw error;
+}
+
+// 세션이 있는 경우에만 UPDATE 실행
+```
+
+### 문제 4: 도매상 회원가입 시 파일 업로드 hanging
+증상: 파일 업로드 후 "가입 중..." 무한 대기
+
+원인:
+- Supabase Storage 클라이언트 SDK도 hanging 문제 발생
+- RLS 정책과의 충돌
+
+해결책:
+- Server-side API route 생성 (`/api/upload-business-registration`)
+- Service Role Key로 RLS 우회
+- 클라이언트는 FormData로 API 호출
+```typescript
+// app/api/upload-business-registration/route.ts
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,  // Service Role Key 사용
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
+);
+
+// Storage 업로드
+const { error } = await supabaseAdmin.storage
+  .from('business-registrations')
+  .upload(filePath, buffer, { ... });
+```
+
+### 문제 5: 사업자 등록증 URL이 DB에 저장되지 않음
+증상:
+- 파일은 Storage에 업로드됨
+- DB의 business_registration_url은 null
+
+원인:
+- callback 라우트에서 Supabase 클라이언트 사용 시 hanging
+
+해결책:
+- callback 라우트도 fetch API로 변경
+- Service Role Key로 Storage 접근
+- localStorage 세션 토큰으로 DB 업데이트
+
+```typescript
+// app/auth/callback/route.ts
+// 1. Service Role Key로 Storage 파일 확인
+const { data: files } = await supabaseAdmin.storage
+  .from('business-registrations')
+  .list(userId, {
+    limit: 1,
+    sortBy: { column: 'created_at', order: 'desc' },
+  });
+
+// 2. fetch API로 DB 업데이트
+const updateUrl = `${SUPABASE_URL}/rest/v1/users?uid=eq.${userId}`;
+const updateResponse = await fetch(updateUrl, {
+  method: 'PATCH',
+  headers: {
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': `Bearer ${sessionToken}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    business_registration_url: publicUrl,
+    verification_status: 'pending',
+  }),
+});
+```
+
+===============================================
+## 📁 프로젝트 파일 구조 (최신)
+===============================================
+
+banana-usedcomputer-web/
+├── app/                                # Next.js App Router
+│   ├── (auth)/                         # 인증 라우트 그룹
+│   │   ├── login/
+│   │   │   └── page.tsx               # 로그인 페이지 ✅
+│   │   └── signup/
+│   │       └── page.tsx               # 회원가입 페이지 ✅
+│   ├── (main)/                         # 메인 앱 라우트 그룹
+│   │   ├── layout.tsx                  # 공통 레이아웃 (네비게이션) ✅
+│   │   ├── page.tsx                    # 홈 화면 ✅
+│   │   ├── admin/
+│   │   │   └── dashboard/
+│   │   │       └── page.tsx            # 관리자 대시보드 ✅
+│   │   ├── products/                   # 상품 관련 (대기)
+│   │   ├── sell-requests/              # 매입 요청 관련 (대기)
+│   │   └── inquiries/                  # 문의 관련 (대기)
+│   ├── api/                            # Server-side API Routes
+│   │   └── upload-business-registration/
+│   │       └── route.ts                # 사업자 등록증 업로드 API ✅
+│   ├── auth/
+│   │   └── callback/
+│   │       └── route.ts                # 이메일 확인 콜백 ✅
+│   ├── globals.css                     # 전역 스타일 ✅
+│   └── layout.tsx                      # 루트 레이아웃 ✅
+│
+├── components/                         # React 컴포넌트
+│   ├── auth/
+│   │   ├── login-form.tsx             # 로그인 폼 ✅
+│   │   └── signup-form.tsx            # 회원가입 폼 ✅
+│   └── common/
+│       ├── loading.tsx                # 로딩 컴포넌트 ✅
+│       └── error.tsx                  # 에러 컴포넌트 ✅
+│
+├── lib/                                # 핵심 로직
+│   ├── supabase/
+│   │   └── config.ts                   # Supabase 클라이언트 초기화 ✅
+│   ├── services/
+│   │   ├── auth.service.ts             # 인증 서비스 ✅
+│   │   ├── admin.service.ts            # 관리자 서비스 ✅
+│   │   └── storage.service.ts          # 스토리지 서비스 ✅
+│   └── hooks/
+│       └── use-auth.ts                 # 인증 Hook ✅
+│
+├── types/
+│   └── user.ts                         # 사용자 타입 정의 ✅
+│
+├── constants/
+│   └── routes.ts                       # 라우트 경로 ✅
+│
+├── 프로젝트_문서화_패키지/            # 문서화 ✅
+│   ├── 00_README_시작하기.md          # 프로젝트 개요
+│   ├── 01_데이터모델_TypeScript_인터페이스.md
+│   ├── 02_화면별_상세_기능_명세서.md
+│   ├── 03_Next.js_프로젝트_구조_제안서.md
+│   └── 05_작업_진행상황_기록.txt     # 이 파일
+│
+├── .env.local                          # 환경 변수 ✅
+├── next.config.js                      # Next.js 설정 ✅
+├── tailwind.config.ts                  # Tailwind CSS 설정 ✅
+├── tsconfig.json                       # TypeScript 설정 ✅
+└── package.json                        # 패키지 정보 ✅
+
+===============================================
+## 🎯 프로젝트 실행 명령어
+===============================================
+
+### 최초 실행 시:
+```bash
+cd /Volumes/WD_BLACK/Project_doing/banana_usedcomputer_web
+npm install
+npm run dev
+```
+
+### 캐시 삭제 후 재시작:
+```bash
+rm -rf .next
+npm install
+npm run dev
+```
+
+### 프로덕션 빌드:
+```bash
+npm run build
+npm start
+```
+
+### 개발 서버 (포트 3000):
+```bash
+npm run dev
+```
+
+브라우저에서 http://localhost:3000 접속
+
+===============================================
+## 🔍 테스트 시나리오
+===============================================
+
+### 1. 일반 사용자 회원가입 및 로그인:
+
+1. http://localhost:3000/signup 접속
+2. 회원가입 폼 작성:
+   - 이메일: test@example.com
+   - 비밀번호: test1234
+   - 이름: 테스트 사용자
+   - 사용자 타입: 일반 사용자 선택
+3. 회원가입 버튼 클릭
+4. "이메일 확인이 필요합니다" 메시지 확인
+5. 이메일 확인 링크 클릭
+6. 자동으로 users 테이블에 데이터 생성됨
+7. 로그인 페이지로 이동하여 로그인
+
+### 2. 도매상 회원가입 (사업자 등록증 업로드):
+
+1. http://localhost:3000/signup 접속
+2. 회원가입 폼 작성:
+   - 이메일: wholesaler@example.com
+   - 비밀번호: test1234
+   - 이름: 바나나컴퍼니
+   - 전화번호: 010-1234-5678
+   - 사용자 타입: 도매상 선택
+3. 사업자 등록증 파일 업로드 (PDF 또는 이미지)
+4. 회원가입 버튼 클릭
+5. 파일 업로드 성공 → Storage에 저장됨
+6. "이메일 확인이 필요합니다" 메시지 확인
+7. 이메일 확인 링크 클릭
+8. /auth/callback에서:
+   - users 테이블에 데이터 생성
+   - Storage에서 파일 확인
+   - business_registration_url 자동 저장
+   - verification_status = 'pending' 설정
+9. 로그인 가능 (승인 대기 상태)
+
+### 3. 관리자 대시보드 (사업자 승인):
+
+전제 조건: 관리자 계정이 필요 (DB에서 user_type을 'admin'으로 수동 변경)
+
+1. 관리자 계정으로 로그인
+2. http://localhost:3000/admin/dashboard 접속
+3. 승인 대기 중인 도매상 목록 확인
+4. 사업자 등록증 미리보기 버튼 클릭
+   - PDF인 경우: iframe으로 표시
+   - 이미지인 경우: img 태그로 표시
+5. 다운로드 버튼 클릭하여 파일 다운로드
+6. 승인 버튼 클릭:
+   - verification_status = 'approved'
+   - 도매상이 상품 등록 가능해짐
+7. 또는 거부 버튼 클릭:
+   - verification_status = 'rejected'
+   - user_type = 'normal'로 변경
+   - 일반 사용자로 강등
+
+===============================================
+## 📊 현재 데이터베이스 현황
+===============================================
+
+### Supabase Auth (auth.users)
+- 테스트 계정 생성됨
+- 이메일 확인 필수
+
+### PostgreSQL Tables
+
+1. users
+   - uid (UUID, PK)
+   - email (TEXT, UNIQUE)
+   - name (TEXT)
+   - phone_number (TEXT, nullable)
+   - business_registration_url (TEXT, nullable)
+   - user_type (TEXT: 'normal', 'wholesaler', 'admin')
+   - verification_status (TEXT: 'none', 'pending', 'approved', 'rejected')
+   - created_at (TIMESTAMPTZ)
+   - updated_at (TIMESTAMPTZ, nullable)
+
+2. products (대기)
+3. inquiries (대기)
+4. sell_requests (대기)
+5. purchase_offers (대기)
+
+### Supabase Storage Buckets
+
+1. business-registrations
+   - Public bucket
+   - 파일 경로: {userId}/{userId}_{timestamp}.{ext}
+   - 최대 크기: 5MB
+   - 허용 타입: image/jpeg, image/png, application/pdf
+
+2. product-images (대기)
+3. sell-request-images (대기)
+
+### Database Triggers
+
+1. handle_new_user()
+   - Auth 가입 시 users 테이블 자동 생성
+   - user_metadata에서 name, user_type, phone_number 추출
+   - verification_status 기본값: 'none'
+
+### Database Functions
+
+1. is_admin()
+   - 현재 사용자가 관리자인지 확인
+   - SECURITY DEFINER, SET search_path, STABLE
+   - RLS 정책에서 사용
+
+===============================================
+## ✅ 다음 작업 체크리스트
+===============================================
+
+### Phase 4: 상품 기능 (진행 예정)
+
+[ ] 1. 데이터 모델 정의
+    - types/product.ts 생성
+    - Product 인터페이스 정의
+
+[ ] 2. 상품 서비스 구현
+    - lib/services/product.service.ts
+    - createProduct(), getProducts(), getProduct(), updateProduct(), deleteProduct()
+
+[ ] 3. 상품 목록 화면
+    - app/(main)/products/page.tsx
+    - 상품 카드 그리드
+    - 검색 기능
+
+[ ] 4. 상품 상세 화면
+    - app/(main)/products/[id]/page.tsx
+    - 이미지 갤러리
+    - 문의하기 버튼
+
+[ ] 5. 상품 등록/수정 화면 (도매상만)
+    - app/(main)/products/new/page.tsx
+    - app/(main)/products/[id]/edit/page.tsx
+    - 이미지 업로드 (Storage)
+
+### Phase 5: 문의 시스템 (대기)
+
+[ ] 1. 데이터 모델 정의
+[ ] 2. 문의 서비스 구현
+[ ] 3. 문의 목록 화면
+[ ] 4. 문의 작성 폼
+[ ] 5. 답변 기능 (도매상)
+
+### Phase 6: 역경매 시스템 (대기)
+
+[ ] 1. 데이터 모델 정의
+[ ] 2. 매입 요청 서비스 구현
+[ ] 3. 매입 요청 등록 화면
+[ ] 4. 매입 요청 목록 (도매상용)
+[ ] 5. 매입 제안 기능 (블라인드)
+[ ] 6. 거래 확정 기능
+
+### Phase 7: 도매상 대시보드 (대기)
+
+[ ] 1. 통계 데이터 표시
+[ ] 2. 등록 상품 목록
+[ ] 3. 받은 문의 목록
+[ ] 4. 매입 제안 현황
+
+===============================================
+## 🆘 문제 발생 시 참고
+===============================================
+
+### Supabase 클라이언트 Hanging 시:
+→ Supabase SDK 사용 중단
+→ localStorage + fetch API 패턴 사용
+→ lib/services/admin.service.ts 참고
+
+### RLS 정책 에러:
+→ 임시로 RLS DISABLE 또는
+→ SECURITY DEFINER 함수 사용
+
+### 이메일 확인 안 됨:
+→ Supabase Dashboard → Authentication → Email Templates 확인
+→ Confirm your signup 템플릿의 Redirect URL 확인
+
+### Storage 업로드 에러:
+→ Service Role Key 사용 (Server-side API)
+→ app/api/upload-business-registration/route.ts 패턴 참고
+
+### 환경 변수 문제:
+→ .env.local 파일 확인
+→ NEXT_PUBLIC_* 변수만 클라이언트에서 접근 가능
+→ 서버 재시작 필요
+
+### Supabase CLI 명령어:
+```bash
+# 로그인
+supabase login
+
+# 프로젝트 연결
+supabase link --project-ref vqypnenjejbtvvvewxee
+
+# 마이그레이션 생성
+supabase migration new migration_name
+
+# 로컬 DB 시작
+supabase start
+
+# 마이그레이션 적용
+supabase db push
+```
+
+### 도움이 필요하면:
+- Supabase 문서: https://supabase.com/docs
+- Next.js 문서: https://nextjs.org/docs
+- PostgreSQL 문서: https://www.postgresql.org/docs/
+
+===============================================
+## 📝 중요 코드 위치
+===============================================
+
+### 인증 관련:
+- 서비스: lib/services/auth.service.ts
+- Hook: lib/hooks/use-auth.ts
+- 로그인: app/(auth)/login/page.tsx
+- 회원가입: app/(auth)/signup/page.tsx
+- 콜백: app/auth/callback/route.ts
+
+### 관리자 관련:
+- 서비스: lib/services/admin.service.ts
+- 대시보드: app/(main)/admin/dashboard/page.tsx
+- localStorage 세션: getSessionToken() 메서드 (line 12-31)
+
+### 파일 업로드 관련:
+- API route: app/api/upload-business-registration/route.ts
+- 서비스: lib/services/storage.service.ts
+- 회원가입 폼: components/auth/signup-form.tsx
+
+### Supabase 설정:
+- 클라이언트: lib/supabase/config.ts
+- 환경 변수: .env.local
+
+### Hanging 문제 해결 패턴:
+- AdminService.getSessionToken() (lib/services/admin.service.ts:12-31)
+- AuthService.signIn() (lib/services/auth.service.ts:152-221)
+- callback route (app/auth/callback/route.ts:38-129)
+
+===============================================
+## 📊 현재 상태 요약
+===============================================
+
+개발 완료도: ████████░░░░░░░░░░░░ 40%
+
+완료:
+- 인증 시스템 (회원가입, 로그인, 이메일 확인) ✅
+- 사업자 인증 시스템 (파일 업로드, 관리자 승인) ✅
+- 관리자 대시보드 (승인/거부, 파일 미리보기/다운로드) ✅
+- Supabase 마이그레이션 ✅
+- Database Triggers ✅
+- RLS 정책 ✅
+- Hanging 문제 해결 ✅
+- 문서화 업데이트 ✅
+
+진행 중:
+- 상품 기능 (목록, 상세, 등록/수정) 🔄
+
+대기:
+- 문의 시스템 ⏳
+- 역경매 시스템 (매입 요청/제안) ⏳
+- 도매상 대시보드 ⏳
+
+다음 단계:
+1. 상품 기능 구현
+2. 문의 시스템 구현
+3. 역경매 시스템 구현
+4. 도매상 대시보드 구현
+5. UI/UX 개선
+6. 프로덕션 배포
+
+===============================================
+## 🎉 주요 성과
+===============================================
+
+1. **Flutter → Next.js 마이그레이션 성공**
+   - Flutter Web에서 Next.js 14 App Router로 완전 전환
+   - Firebase → Supabase 마이그레이션 완료
+   - 타입 안정성 향상 (TypeScript)
+
+2. **Supabase Hanging 문제 해결**
+   - localStorage 기반 세션 관리
+   - fetch API 직접 호출 패턴 확립
+   - 안정적인 인증 시스템 구축
+
+3. **체계적인 사업자 인증 시스템**
+   - Server-side 파일 업로드 (RLS 우회)
+   - 이메일 확인 후 자동 처리
+   - 관리자 승인/거부 시스템
+   - 파일 미리보기/다운로드 기능
+
+4. **완전한 문서화**
+   - 프로젝트 개요, 구조, 데이터 모델
+   - 작업 진행 상황 기록
+   - 문제 해결 방법 정리
+
+===============================================
+작업 종료: 2025-11-02
+다음 작업 시 이 파일을 참고하여 이어서 진행하세요.
+
+프로젝트 완성도: 중간 (인증/관리자 완료, 상품/문의/역경매 대기)
+배포 준비 상태: 부분 완료 (인증 시스템만)
+추천 다음 단계: 상품 기능 구현
+===============================================
