@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ProductService } from '@/lib/services/product.service';
 import { SellRequestService } from '@/lib/services/sell-request.service';
+import { getAccessToken } from '@/lib/utils/auth';
 
 export default function WholesalerDashboardPage() {
   const { user, isLoading: authLoading } = useAuth();
@@ -37,11 +38,12 @@ export default function WholesalerDashboardPage() {
       setLoading(true);
       try {
         console.log('도매상 대시보드: 카운트 조회 시작', user.uid);
+        const accessToken = getAccessToken();
 
         const [products, sellRequests, wonOffers] = await Promise.all([
           ProductService.getProductCountBySeller(user.uid),
-          SellRequestService.getOpenSellRequestCount(),
-          SellRequestService.getWonOffersCount(user.uid),
+          SellRequestService.getOpenSellRequestCount(accessToken || undefined),
+          SellRequestService.getWonOffersCount(user.uid, accessToken || undefined),
         ]);
 
         console.log('도매상 대시보드: 카운트 조회 완료', { products, sellRequests, wonOffers });

@@ -10,6 +10,7 @@ import { useAuth } from '@/lib/hooks/use-auth';
 import { UserType } from '@/types/user';
 import { ContactWholesalerModal } from '@/components/contact-wholesaler-modal';
 import { PurchaseOffer } from '@/types/purchase-offer';
+import { getAccessToken } from '@/lib/utils/auth';
 
 export default function MySellRequestsPage() {
   const [sellRequests, setSellRequests] = useState<SellRequest[]>([]);
@@ -31,7 +32,8 @@ export default function MySellRequestsPage() {
     const fetchMySellRequests = async () => {
       try {
         console.log('[MySellRequestsPage] Fetching my sell requests...');
-        const data = await SellRequestService.getMySellRequests(user.uid);
+        const accessToken = getAccessToken();
+        const data = await SellRequestService.getMySellRequests(user.uid, accessToken || undefined);
         console.log('[MySellRequestsPage] Fetched:', data.length, 'requests');
         setSellRequests(data);
 
@@ -42,7 +44,7 @@ export default function MySellRequestsPage() {
           await Promise.all(
             closedRequests.map(async (req) => {
               try {
-                const offers = await SellRequestService.getOffers(req.id);
+                const offers = await SellRequestService.getOffers(req.id, accessToken || undefined);
                 newOffersMap.set(req.id, offers);
               } catch (error) {
                 console.error('[MySellRequestsPage] Failed to fetch offers for:', req.id, error);

@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/lib/hooks/use-auth';
 import { UserType, VerificationStatus } from '@/types/user';
+import { getAccessToken } from '@/lib/utils/auth';
 
 export default function SellRequestsPage() {
   const [sellRequests, setSellRequests] = useState<SellRequest[]>([]);
@@ -19,7 +20,8 @@ export default function SellRequestsPage() {
     const fetchSellRequests = async () => {
       try {
         console.log('[SellRequestsPage] Fetching sell requests...');
-        const data = await SellRequestService.getAllSellRequests();
+        const accessToken = getAccessToken();
+        const data = await SellRequestService.getAllSellRequests(accessToken || undefined);
         console.log('[SellRequestsPage] Fetched:', data.length, 'requests');
         setSellRequests(data);
       } catch (error) {

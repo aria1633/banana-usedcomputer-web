@@ -59,7 +59,8 @@ export default function SellRequestDetailPage({ params }: { params: { id: string
   useEffect(() => {
     const fetchSellRequest = async () => {
       try {
-        const data = await SellRequestService.getSellRequest(params.id);
+        const accessToken = getAccessToken();
+        const data = await SellRequestService.getSellRequest(params.id, accessToken || undefined);
         if (!data) {
           setError('매입 요청을 찾을 수 없습니다.');
         } else {
@@ -96,7 +97,8 @@ export default function SellRequestDetailPage({ params }: { params: { id: string
 
       const fetchOffers = async () => {
         try {
-          const data = await SellRequestService.getOffers(params.id);
+          const accessToken = getAccessToken();
+          const data = await SellRequestService.getOffers(params.id, accessToken || undefined);
           console.log('[SellRequestDetail] 받은 입찰 데이터:', data);
 
           // 도매상은 자신의 입찰만 필터링
@@ -146,7 +148,7 @@ export default function SellRequestDetailPage({ params }: { params: { id: string
       }, accessToken);
 
       // ✅ 입찰 후 offers 재조회 - 즉시 UI 업데이트
-      const updatedOffers = await SellRequestService.getOffers(params.id);
+      const updatedOffers = await SellRequestService.getOffers(params.id, accessToken);
       const myOffers = updatedOffers.filter(offer => offer.wholesalerId === user.uid);
       setOffers(myOffers);
 

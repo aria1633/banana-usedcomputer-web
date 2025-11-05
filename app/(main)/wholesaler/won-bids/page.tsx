@@ -46,11 +46,12 @@ export default function WonBidsPage() {
       setLoading(true);
       try {
         console.log('낙찰 내역: 조회 시작', user.uid);
-        const offers = await SellRequestService.getWonOffers(user.uid);
-        console.log('낙찰 내역: 조회 완료', offers.length);
 
         // Get JWT token
         const accessToken = getAccessToken();
+
+        const offers = await SellRequestService.getWonOffers(user.uid, accessToken || undefined);
+        console.log('낙찰 내역: 조회 완료', offers.length);
 
         // 각 offer에 대한 transaction 정보 조회
         const offersWithTransactions = await Promise.all(
@@ -181,7 +182,7 @@ export default function WonBidsPage() {
       await new Promise(resolve => setTimeout(resolve, 500));
 
       // 목록 새로고침
-      const offers = await SellRequestService.getWonOffers(user.uid);
+      const offers = await SellRequestService.getWonOffers(user.uid, accessToken);
       console.log('[거래 완료] getWonOffers 결과:', offers.length);
 
       const offersWithTransactions = await Promise.all(
