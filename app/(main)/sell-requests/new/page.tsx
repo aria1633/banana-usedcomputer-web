@@ -11,6 +11,7 @@ import { UserType } from '@/types/user';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase/config';
+import { getAccessToken } from '@/lib/utils/auth';
 
 export default function NewSellRequestPage() {
   const router = useRouter();
@@ -111,17 +112,9 @@ export default function NewSellRequestPage() {
     setError('');
 
     try {
-      // 세션 토큰 가져오기 (localStorage에서 직접 가져오기)
+      // 세션 토큰 가져오기
       console.log('[매입 요청 등록] 세션 토큰 가져오기 시작');
-      const storageKey = `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0]}-auth-token`;
-      const sessionData = localStorage.getItem(storageKey);
-
-      if (!sessionData) {
-        throw new Error('세션 정보를 찾을 수 없습니다. 다시 로그인해주세요.');
-      }
-
-      const session = JSON.parse(sessionData);
-      const accessToken = session.access_token;
+      const accessToken = getAccessToken();
 
       if (!accessToken) {
         throw new Error('인증 토큰을 찾을 수 없습니다. 다시 로그인해주세요.');

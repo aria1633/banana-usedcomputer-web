@@ -436,3 +436,381 @@
 [debug] [2025-11-04T01:36:47.910Z] > authorizing via signed-in user (aria1633@gmail.com)
 [debug] [2025-11-04T01:36:47.911Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
 [debug] [2025-11-04T01:36:47.911Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T01:56:09.447Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T01:56:09.449Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T01:56:09.449Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T01:56:09.449Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T01:56:09.458Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.458Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.458Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.459Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.459Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.460Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.460Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.460Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.461Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.461Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.462Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.462Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.462Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.462Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.462Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.466Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.466Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.466Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.466Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.466Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.466Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.466Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.466Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.467Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.467Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.467Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.467Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.467Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.467Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.467Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.468Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.468Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.468Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.468Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.468Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.470Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.470Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.470Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.470Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.470Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.471Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T01:56:09.471Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T01:56:09.471Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.471Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.471Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.471Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.471Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.472Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.472Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.472Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.472Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.472Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.472Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.472Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.472Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.472Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.472Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.473Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.473Z] Checked if tokens are valid: false, expires at: 1762223804700
+[debug] [2025-11-05T01:56:09.473Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T01:56:09.473Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T01:56:09.473Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.833Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:09.833Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.866Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [none]
+[debug] [2025-11-05T01:56:09.866Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:09.871Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:09.871Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.891Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [none]
+[debug] [2025-11-05T01:56:09.891Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:09.893Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:09.893Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.908Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-11-05T01:56:09.909Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:09.910Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:09.910Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.925Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [none]
+[debug] [2025-11-05T01:56:09.925Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:09.926Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:09.926Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.941Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [none]
+[debug] [2025-11-05T01:56:09.942Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:09.943Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:09.943Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.958Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-05T01:56:09.958Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:09.959Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:09.959Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.974Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-11-05T01:56:09.974Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:09.976Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:09.976Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:09.991Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [none]
+[debug] [2025-11-05T01:56:09.991Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:09.992Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:09.992Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:10.008Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-05T01:56:10.008Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:10.009Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:10.009Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:10.024Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-05T01:56:10.024Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:10.025Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:10.025Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:10.040Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [none]
+[debug] [2025-11-05T01:56:10.040Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:10.041Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T01:56:10.041Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T01:56:10.057Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-11-05T01:56:10.057Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T01:56:11.320Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com 403
+[debug] [2025-11-05T01:56:11.320Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [omitted]
+[debug] [2025-11-05T01:56:11.322Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com 403
+[debug] [2025-11-05T01:56:11.322Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-05T01:56:11.327Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com 403
+[debug] [2025-11-05T01:56:11.327Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [omitted]
+[debug] [2025-11-05T01:56:11.355Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com 403
+[debug] [2025-11-05T01:56:11.355Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [omitted]
+[debug] [2025-11-05T01:56:11.359Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com 403
+[debug] [2025-11-05T01:56:11.359Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-11-05T01:56:11.366Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com 403
+[debug] [2025-11-05T01:56:11.366Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [omitted]
+[debug] [2025-11-05T01:56:11.366Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com 403
+[debug] [2025-11-05T01:56:11.366Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [omitted]
+[debug] [2025-11-05T01:56:11.373Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com 403
+[debug] [2025-11-05T01:56:11.373Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-05T01:56:11.392Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com 403
+[debug] [2025-11-05T01:56:11.392Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [omitted]
+[debug] [2025-11-05T01:56:11.393Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com 403
+[debug] [2025-11-05T01:56:11.393Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-11-05T01:56:11.412Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com 403
+[debug] [2025-11-05T01:56:11.412Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-11-05T01:56:11.437Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com 403
+[debug] [2025-11-05T01:56:11.437Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-05T01:56:11.508Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T01:56:11.508Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T01:56:11.512Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T01:56:11.512Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T01:56:11.517Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T01:56:11.517Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T01:56:11.519Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T01:56:11.519Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:54:37.701Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:54:37.703Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:54:37.703Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:54:37.703Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:54:37.707Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.708Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.708Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.709Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.709Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.710Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.710Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.710Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.710Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.710Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.711Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.711Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.711Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.711Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.711Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.714Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.714Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.714Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.715Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.715Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.715Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.715Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.715Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.716Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.716Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.716Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.716Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.716Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.716Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.716Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.718Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.718Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.718Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.718Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.718Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.720Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.720Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.720Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.720Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.720Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.721Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:54:37.721Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:54:37.721Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.721Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.721Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.721Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.721Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.721Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.721Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.721Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.721Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.722Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.722Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.722Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.722Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.722Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.722Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.723Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.723Z] Checked if tokens are valid: false, expires at: 1762311369041
+[debug] [2025-11-05T20:54:37.723Z] > refreshing access token with scopes: []
+[debug] [2025-11-05T20:54:37.723Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-05T20:54:37.723Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.918Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:37.918Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.934Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [none]
+[debug] [2025-11-05T20:54:37.935Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:37.937Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:37.937Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.948Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [none]
+[debug] [2025-11-05T20:54:37.948Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:37.949Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:37.949Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.960Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-05T20:54:37.960Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:37.960Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:37.960Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.971Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-11-05T20:54:37.971Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:37.971Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:37.971Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.982Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-11-05T20:54:37.982Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:37.982Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:37.982Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:37.993Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-11-05T20:54:37.993Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:37.994Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:37.994Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:38.004Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [none]
+[debug] [2025-11-05T20:54:38.004Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:38.004Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:38.004Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:38.015Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [none]
+[debug] [2025-11-05T20:54:38.015Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:38.015Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:38.015Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:38.027Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-05T20:54:38.027Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:38.027Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:38.027Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:38.039Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [none]
+[debug] [2025-11-05T20:54:38.039Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:38.040Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:38.040Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:38.051Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [none]
+[debug] [2025-11-05T20:54:38.051Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:38.051Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-05T20:54:38.051Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-05T20:54:38.063Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-05T20:54:38.063Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:54:39.005Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com 403
+[debug] [2025-11-05T20:54:39.006Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-05T20:54:39.033Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com 403
+[debug] [2025-11-05T20:54:39.033Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-11-05T20:54:39.037Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com 403
+[debug] [2025-11-05T20:54:39.037Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [omitted]
+[debug] [2025-11-05T20:54:39.040Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com 403
+[debug] [2025-11-05T20:54:39.040Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [omitted]
+[debug] [2025-11-05T20:54:39.872Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com 403
+[debug] [2025-11-05T20:54:39.872Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-05T20:54:39.877Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com 403
+[debug] [2025-11-05T20:54:39.877Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-05T20:54:39.894Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com 403
+[debug] [2025-11-05T20:54:39.894Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-11-05T20:54:39.898Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com 403
+[debug] [2025-11-05T20:54:39.898Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [omitted]
+[debug] [2025-11-05T20:54:39.903Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com 403
+[debug] [2025-11-05T20:54:39.903Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [omitted]
+[debug] [2025-11-05T20:54:39.903Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com 403
+[debug] [2025-11-05T20:54:39.903Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [omitted]
+[debug] [2025-11-05T20:54:39.907Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com 403
+[debug] [2025-11-05T20:54:39.907Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-11-05T20:54:39.909Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com 403
+[debug] [2025-11-05T20:54:39.909Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [omitted]
+[debug] [2025-11-05T20:54:39.977Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:54:39.977Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:54:39.979Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:54:39.979Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:54:39.985Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:54:39.985Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:54:39.986Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:54:39.986Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:55:45.272Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:55:45.273Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:55:45.278Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.278Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.278Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.278Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.279Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.279Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.282Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.282Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.282Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [none]
+[debug] [2025-11-05T20:55:45.283Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.284Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-05T20:55:45.284Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.284Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-11-05T20:55:45.284Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.284Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [none]
+[debug] [2025-11-05T20:55:45.284Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.290Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:55:45.290Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:55:45.290Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:55:45.290Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:55:45.291Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.291Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.291Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.291Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.291Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.291Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.292Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.292Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.292Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.292Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.292Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.292Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.292Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.292Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.293Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.293Z] Checked if tokens are valid: true, expires at: 1762379677051
+[debug] [2025-11-05T20:55:45.293Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [none]
+[debug] [2025-11-05T20:55:45.293Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.293Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-05T20:55:45.293Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.294Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-11-05T20:55:45.294Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.295Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [none]
+[debug] [2025-11-05T20:55:45.295Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.295Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [none]
+[debug] [2025-11-05T20:55:45.295Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.296Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-05T20:55:45.296Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.296Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-11-05T20:55:45.296Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:45.296Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [none]
+[debug] [2025-11-05T20:55:45.296Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com x-goog-quota-user=projects/bananausedcomputer
+[debug] [2025-11-05T20:55:46.298Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com 403
+[debug] [2025-11-05T20:55:46.299Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-05T20:55:46.300Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com 403
+[debug] [2025-11-05T20:55:46.300Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-05T20:55:46.307Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com 403
+[debug] [2025-11-05T20:55:46.307Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [omitted]
+[debug] [2025-11-05T20:55:46.311Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com 403
+[debug] [2025-11-05T20:55:46.311Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-11-05T20:55:46.311Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com 403
+[debug] [2025-11-05T20:55:46.311Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-05T20:55:46.313Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com 403
+[debug] [2025-11-05T20:55:46.313Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [omitted]
+[debug] [2025-11-05T20:55:46.315Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com 403
+[debug] [2025-11-05T20:55:46.315Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [omitted]
+[debug] [2025-11-05T20:55:46.317Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com 403
+[debug] [2025-11-05T20:55:46.317Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-11-05T20:55:46.321Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com 403
+[debug] [2025-11-05T20:55:46.321Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [omitted]
+[debug] [2025-11-05T20:55:46.322Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com 403
+[debug] [2025-11-05T20:55:46.322Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firebaseio.com [omitted]
+[debug] [2025-11-05T20:55:46.324Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com 403
+[debug] [2025-11-05T20:55:46.324Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-11-05T20:55:46.324Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com 403
+[debug] [2025-11-05T20:55:46.324Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/bananausedcomputer/services/firestore.googleapis.com [omitted]
+[debug] [2025-11-05T20:55:46.396Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:55:46.396Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:55:46.397Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:55:46.397Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:55:46.399Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:55:46.399Z] > authorizing via signed-in user (aria1633@gmail.com)
+[debug] [2025-11-05T20:55:46.400Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-05T20:55:46.400Z] > authorizing via signed-in user (aria1633@gmail.com)
