@@ -95,15 +95,22 @@ export class AuthService {
       // 3. users 테이블에 직접 INSERT
       logger.info('Inserting user into users table...');
 
+      // session이 있으면 access_token 사용, 없으면 API key 사용
+      const accessToken = authData.session?.access_token;
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Prefer': 'return=minimal',
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       try {
         const insertResponse = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            'Prefer': 'return=minimal',
-          },
+          headers,
           body: JSON.stringify({
             uid: uid,
             email: userEmail,

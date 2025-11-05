@@ -82,10 +82,20 @@ export class TransactionService {
    */
   static async getTransactionsByWholesaler(
     wholesalerId: string,
-    status?: TransactionStatus
+    status?: TransactionStatus,
+    accessToken?: string
   ): Promise<Transaction[]> {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+    const headers: Record<string, string> = {
+      'apikey': supabaseKey,
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
 
     // 쿼리 파라미터 구성
     let queryParams = `wholesaler_id=eq.${wholesalerId}&order=created_at.desc`;
@@ -97,10 +107,7 @@ export class TransactionService {
       `${supabaseUrl}/rest/v1/${this.TRANSACTIONS_COLLECTION}?${queryParams}`,
       {
         method: 'GET',
-        headers: {
-          'apikey': supabaseKey,
-          'Content-Type': 'application/json',
-        },
+        headers,
       }
     );
 
@@ -239,18 +246,24 @@ export class TransactionService {
   /**
    * 특정 거래 조회 (ID로)
    */
-  static async getTransaction(transactionId: string): Promise<Transaction | null> {
+  static async getTransaction(transactionId: string, accessToken?: string): Promise<Transaction | null> {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+    const headers: Record<string, string> = {
+      'apikey': supabaseKey,
+      'Content-Type': 'application/json',
+    };
+
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
 
     const response = await fetch(
       `${supabaseUrl}/rest/v1/${this.TRANSACTIONS_COLLECTION}?id=eq.${transactionId}`,
       {
         method: 'GET',
-        headers: {
-          'apikey': supabaseKey,
-          'Content-Type': 'application/json',
-        },
+        headers,
       }
     );
 

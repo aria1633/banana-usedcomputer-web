@@ -73,21 +73,27 @@ export class SellRequestService {
   /**
    * 매입 요청 상세 조회 - Fetch API 사용
    */
-  static async getSellRequest(requestId: string): Promise<SellRequest | null> {
+  static async getSellRequest(requestId: string, accessToken?: string): Promise<SellRequest | null> {
     try {
       console.log('[SellRequestService] getSellRequest 시작 (Fetch API):', requestId);
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+      const headers: Record<string, string> = {
+        'apikey': supabaseKey,
+        'Content-Type': 'application/json',
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(
         `${supabaseUrl}/rest/v1/${this.SELL_REQUESTS_COLLECTION}?id=eq.${requestId}`,
         {
           method: 'GET',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-          },
+          headers,
         }
       );
 
@@ -124,21 +130,27 @@ export class SellRequestService {
   /**
    * 매입 요청 목록 조회 (도매상용 - 진행 중인 요청만) - Fetch API 사용
    */
-  static async getAllSellRequests(): Promise<SellRequest[]> {
+  static async getAllSellRequests(accessToken?: string): Promise<SellRequest[]> {
     try {
       console.log('[SellRequestService] getAllSellRequests 시작 (Fetch API)');
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+      const headers: Record<string, string> = {
+        'apikey': supabaseKey,
+        'Content-Type': 'application/json',
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(
         `${supabaseUrl}/rest/v1/${this.SELL_REQUESTS_COLLECTION}?status=eq.${SellRequestStatus.OPEN}&order=created_at.desc`,
         {
           method: 'GET',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-          },
+          headers,
         }
       );
 
@@ -163,21 +175,27 @@ export class SellRequestService {
   /**
    * 내 매입 요청 목록 조회 (일반 사용자용) - Fetch API 사용
    */
-  static async getMySellRequests(userId: string): Promise<SellRequest[]> {
+  static async getMySellRequests(userId: string, accessToken?: string): Promise<SellRequest[]> {
     try {
       console.log('[SellRequestService] getMySellRequests 시작 (Fetch API):', userId);
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+      const headers: Record<string, string> = {
+        'apikey': supabaseKey,
+        'Content-Type': 'application/json',
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(
         `${supabaseUrl}/rest/v1/${this.SELL_REQUESTS_COLLECTION}?seller_id=eq.${userId}&order=created_at.desc`,
         {
           method: 'GET',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-          },
+          headers,
         }
       );
 
@@ -321,21 +339,27 @@ export class SellRequestService {
   /**
    * 매입 요청에 대한 제안 목록 조회 - Fetch API 사용
    */
-  static async getOffers(sellRequestId: string): Promise<PurchaseOffer[]> {
+  static async getOffers(sellRequestId: string, accessToken?: string): Promise<PurchaseOffer[]> {
     try {
       console.log('[SellRequestService] getOffers 시작 (Fetch API):', sellRequestId);
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+      const headers: Record<string, string> = {
+        'apikey': supabaseKey,
+        'Content-Type': 'application/json',
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(
         `${supabaseUrl}/rest/v1/${this.PURCHASE_OFFERS_COLLECTION}?sell_request_id=eq.${sellRequestId}&order=offer_price.desc`,
         {
           method: 'GET',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-          },
+          headers,
         }
       );
 
@@ -536,22 +560,27 @@ export class SellRequestService {
   /**
    * 도매상의 제안 개수 조회 - Fetch API 사용
    */
-  static async getOfferCount(sellRequestId: string): Promise<number> {
+  static async getOfferCount(sellRequestId: string, accessToken?: string): Promise<number> {
     try {
       console.log('[SellRequestService] getOfferCount 시작 (Fetch API):', sellRequestId);
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+      const headers: Record<string, string> = {
+        'apikey': supabaseKey,
+        'Prefer': 'count=exact',
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(
         `${supabaseUrl}/rest/v1/${this.PURCHASE_OFFERS_COLLECTION}?sell_request_id=eq.${sellRequestId}`,
         {
           method: 'HEAD',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-            'Prefer': 'count=exact',
-          },
+          headers,
         }
       );
 
@@ -585,22 +614,27 @@ export class SellRequestService {
   /**
    * 진행 중인 매입 요청 개수 조회 - Fetch API 사용
    */
-  static async getOpenSellRequestCount(): Promise<number> {
+  static async getOpenSellRequestCount(accessToken?: string): Promise<number> {
     try {
       console.log('[SellRequestService] getOpenSellRequestCount 시작 (Fetch API)');
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+      const headers: Record<string, string> = {
+        'apikey': supabaseKey,
+        'Prefer': 'count=exact',
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(
         `${supabaseUrl}/rest/v1/${this.SELL_REQUESTS_COLLECTION}?status=eq.${SellRequestStatus.OPEN}`,
         {
           method: 'HEAD',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-            'Prefer': 'count=exact',
-          },
+          headers,
         }
       );
 
@@ -634,22 +668,28 @@ export class SellRequestService {
   /**
    * 도매상이 낙찰받은 매입 제안 조회 - Fetch API 사용
    */
-  static async getWonOffers(wholesalerId: string): Promise<Array<PurchaseOffer & { sellRequest: SellRequest }>> {
+  static async getWonOffers(wholesalerId: string, accessToken?: string): Promise<Array<PurchaseOffer & { sellRequest: SellRequest }>> {
     try {
       console.log('[SellRequestService] getWonOffers 시작 (Fetch API):', wholesalerId);
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+      const headers: Record<string, string> = {
+        'apikey': supabaseKey,
+        'Content-Type': 'application/json',
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       // 낙찰받은 제안 조회
       const response = await fetch(
         `${supabaseUrl}/rest/v1/${this.PURCHASE_OFFERS_COLLECTION}?wholesaler_id=eq.${wholesalerId}&is_selected=eq.true&order=created_at.desc`,
         {
           method: 'GET',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-          },
+          headers,
         }
       );
 
@@ -667,7 +707,7 @@ export class SellRequestService {
       // 각 제안에 대한 매입 요청 정보 조회
       const result = await Promise.all(
         offers.map(async (offer: any) => {
-          const sellRequest = await this.getSellRequest(offer.sell_request_id);
+          const sellRequest = await this.getSellRequest(offer.sell_request_id, accessToken);
           return {
             ...this.mapToPurchaseOffer(offer),
             sellRequest: sellRequest!,
@@ -686,22 +726,27 @@ export class SellRequestService {
   /**
    * 도매상이 낙찰받은 매입 제안 개수 조회 - Fetch API 사용
    */
-  static async getWonOffersCount(wholesalerId: string): Promise<number> {
+  static async getWonOffersCount(wholesalerId: string, accessToken?: string): Promise<number> {
     try {
       console.log('[SellRequestService] getWonOffersCount 시작 (Fetch API):', wholesalerId);
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+      const headers: Record<string, string> = {
+        'apikey': supabaseKey,
+        'Prefer': 'count=exact',
+      };
+
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       const response = await fetch(
         `${supabaseUrl}/rest/v1/${this.PURCHASE_OFFERS_COLLECTION}?wholesaler_id=eq.${wholesalerId}&is_selected=eq.true`,
         {
           method: 'HEAD',
-          headers: {
-            'apikey': supabaseKey,
-            'Authorization': `Bearer ${supabaseKey}`,
-            'Prefer': 'count=exact',
-          },
+          headers,
         }
       );
 
