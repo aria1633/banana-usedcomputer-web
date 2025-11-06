@@ -724,52 +724,90 @@ export class SellRequestService {
   }
 
   /**
-   * 도매상이 낙찰받은 매입 제안 개수 조회 - Fetch API 사용
+   * 도매상이 낙찰받은 매입 제안 개수 조회 (진행중인 거래만) - Fetch API 사용
+   *
+   * 낙찰받은 제안 중 다음 조건을 만족하는 것만 카운트합니다:
+   * 1. transaction이 없는 경우 (아직 거래 시작 전)
+   * 2. transaction이 있고 status가 'in_progress'인 경우
+   *
+   * 'completed' 상태의 거래는 제외됩니다.
    */
   static async getWonOffersCount(wholesalerId: string, accessToken?: string): Promise<number> {
     try {
-      console.log('[SellRequestService] getWonOffersCount 시작 (Fetch API):', wholesalerId);
+      console.log('[SellRequestService] getWonOffersCount 시작 (진행중인 거래만):', wholesalerId);
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
       const headers: Record<string, string> = {
         'apikey': supabaseKey,
-        'Prefer': 'count=exact',
+        'Content-Type': 'application/json',
       };
 
       if (accessToken) {
         headers['Authorization'] = `Bearer ${accessToken}`;
       }
 
-      const response = await fetch(
-        `${supabaseUrl}/rest/v1/${this.PURCHASE_OFFERS_COLLECTION}?wholesaler_id=eq.${wholesalerId}&is_selected=eq.true`,
+      // 1단계: 낙찰받은 제안(is_selected=true) 조회
+      const offersResponse = await fetch(
+        `${supabaseUrl}/rest/v1/${this.PURCHASE_OFFERS_COLLECTION}?wholesaler_id=eq.${wholesalerId}&is_selected=eq.true&select=id`,
         {
-          method: 'HEAD',
+          method: 'GET',
           headers,
         }
       );
 
-      console.log('[SellRequestService] getWonOffersCount response status:', response.status);
+      console.log('[SellRequestService] Offers response status:', offersResponse.status);
 
-      if (!response.ok) {
-        console.error('[SellRequestService] Count failed:', response.status);
+      if (!offersResponse.ok) {
+        console.error('[SellRequestService] Offers fetch failed:', offersResponse.status);
         return 0;
       }
 
-      const contentRange = response.headers.get('Content-Range');
-      console.log('[SellRequestService] Content-Range:', contentRange);
+      const offers = await offersResponse.json();
+      console.log('[SellRequestService] Total won offers:', offers.length);
 
-      if (contentRange) {
-        const match = contentRange.match(/\/(\d+)$/);
-        if (match) {
-          const count = parseInt(match[1], 10);
-          console.log('[SellRequestService] Won offers count:', count);
-          return count;
+      if (offers.length === 0) {
+        return 0;
+      }
+
+      const offerIds = offers.map((offer: any) => offer.id);
+
+      // 2단계: transactions 테이블에서 completed 상태인 거래 개수 조회
+      const completedTransactionsResponse = await fetch(
+        `${supabaseUrl}/rest/v1/transactions?purchase_offer_id=in.(${offerIds.join(',')})&status=eq.completed`,
+        {
+          method: 'HEAD',
+          headers: {
+            ...headers,
+            'Prefer': 'count=exact',
+          },
+        }
+      );
+
+      console.log('[SellRequestService] Completed transactions response status:', completedTransactionsResponse.status);
+
+      let completedCount = 0;
+      if (completedTransactionsResponse.ok) {
+        const contentRange = completedTransactionsResponse.headers.get('Content-Range');
+        console.log('[SellRequestService] Completed Content-Range:', contentRange);
+
+        if (contentRange) {
+          const match = contentRange.match(/\/(\d+)$/);
+          if (match) {
+            completedCount = parseInt(match[1], 10);
+          }
         }
       }
 
-      return 0;
+      console.log('[SellRequestService] Completed transactions count:', completedCount);
+
+      // 3단계: 전체 낙찰 개수에서 completed 개수를 뺌
+      // (transaction이 없거나 in_progress인 경우 = 전체 - completed)
+      const inProgressCount = offers.length - completedCount;
+      console.log('[SellRequestService] In-progress count (total - completed):', inProgressCount);
+
+      return inProgressCount;
     } catch (error) {
       console.error('[SellRequestService] getWonOffersCount error:', error);
       return 0;
