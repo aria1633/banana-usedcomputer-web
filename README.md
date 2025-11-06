@@ -265,4 +265,10 @@ MIT License
 
 ---
 
-**마지막 업데이트**: 2025-11-02
+**마지막 업데이트**: 2025-11-06
+
+## 🚀 배포
+
+- **Production**: Vercel
+- **URL**: https://banana-usedcomputer-web.vercel.app
+- **Auto Deploy**: GitHub main 브랜치에 푸시 시 자동 배포
