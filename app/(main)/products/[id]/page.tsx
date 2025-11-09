@@ -7,6 +7,8 @@ import { ProductService } from '@/lib/services/product.service';
 import { Product } from '@/types/product';
 import Image from 'next/image';
 import Link from 'next/link';
+import InquiryModal from '@/components/InquiryModal';
+import ContactSellerModal from '@/components/ContactSellerModal';
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -15,6 +17,8 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const [error, setError] = useState('');
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -202,7 +206,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             <div className="space-y-3 mb-6">
               {product.isAvailable ? (
                 <>
-                  <button className="w-full px-6 py-4 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => setIsInquiryModalOpen(true)}
+                    className="w-full px-6 py-4 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition flex items-center justify-center gap-2"
+                  >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
@@ -213,7 +220,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                     </svg>
                     구매 문의하기
                   </button>
-                  <button className="w-full px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition">
+                  <button
+                    onClick={() => setIsContactModalOpen(true)}
+                    className="w-full px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition"
+                  >
                     판매자에게 연락하기
                   </button>
                 </>
@@ -291,6 +301,23 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           상품 목록으로
         </Link>
       </div>
+
+      {/* 모달들 */}
+      <InquiryModal
+        isOpen={isInquiryModalOpen}
+        onClose={() => setIsInquiryModalOpen(false)}
+        productId={product.id}
+        productTitle={product.title}
+        sellerId={product.sellerId}
+        sellerName={product.sellerName}
+      />
+
+      <ContactSellerModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        sellerId={product.sellerId}
+        sellerName={product.sellerName}
+      />
     </div>
   );
 }
