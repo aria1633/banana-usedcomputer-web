@@ -5,6 +5,8 @@
  * SSR 환경에서도 안전하게 작동하도록 설계되었습니다.
  */
 
+import { User, UserType } from '@/types/user';
+
 /**
  * localStorage에서 Supabase 액세스 토큰을 안전하게 가져옵니다.
  *
@@ -154,4 +156,11 @@ export const clearAuthToken = (): void => {
   } catch (error) {
     console.error('[Auth] Failed to clear token:', error);
   }
+};
+
+/**
+ * 현재 사용자가 관리자인지 확인합니다.
+ */
+export const isAdmin = (user: User | null): boolean => {
+  return user?.userType === UserType.ADMIN;
 };

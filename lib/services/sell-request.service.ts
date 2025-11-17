@@ -559,6 +559,40 @@ export class SellRequestService {
   }
 
   /**
+   * 매입 요청 삭제 (관리자 전용) - Fetch API 사용
+   */
+  static async deleteSellRequest(requestId: string, accessToken: string): Promise<void> {
+    try {
+      console.log('[SellRequestService] deleteSellRequest 시작:', requestId);
+
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+      const response = await fetch(
+        `${supabaseUrl}/rest/v1/${this.SELL_REQUESTS_COLLECTION}?id=eq.${requestId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'apikey': supabaseKey,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('[SellRequestService] Delete failed:', errorText);
+        throw new Error(`매입 요청 삭제 실패: ${response.status} - ${errorText}`);
+      }
+
+      console.log('[SellRequestService] deleteSellRequest 완료');
+    } catch (error) {
+      console.error('[SellRequestService] deleteSellRequest error:', error);
+      throw new Error(`매입 요청 삭제 실패: ${error}`);
+    }
+  }
+
+  /**
    * 도매상의 제안 개수 조회 - Fetch API 사용
    */
   static async getOfferCount(sellRequestId: string, accessToken?: string): Promise<number> {
