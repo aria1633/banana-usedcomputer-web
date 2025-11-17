@@ -51,6 +51,16 @@ export default function ProductsPage() {
                            user?.verificationStatus === VerificationStatus.APPROVED;
   const isAdminUser = isAdmin(user);
 
+  // 디버깅: 관리자 권한 확인
+  useEffect(() => {
+    console.log('[ProductsPage] User info:', {
+      hasUser: !!user,
+      userType: user?.userType,
+      isAdminUser,
+      UserTypeADMIN: UserType.ADMIN
+    });
+  }, [user, isAdminUser]);
+
   const handleDelete = async (productId: string, e: any) => {
     e.preventDefault();
     e.stopPropagation();
