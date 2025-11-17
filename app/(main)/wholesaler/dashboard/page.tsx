@@ -145,7 +145,7 @@ export default function WholesalerDashboardPage() {
             </div>
           </div>
           <Link
-            href="/products"
+            href="/products?myProducts=true"
             className="mt-4 block text-sm text-primary hover:underline"
           >
             상품 관리 →
@@ -241,7 +241,7 @@ export default function WholesalerDashboardPage() {
             </Link>
 
             <Link
-              href="/products"
+              href="/products?myProducts=true"
               className="flex items-center p-4 border rounded-lg hover:bg-gray-50 transition"
             >
               <div className="flex-1">

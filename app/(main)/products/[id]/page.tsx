@@ -9,9 +9,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import InquiryModal from '@/components/InquiryModal';
 import ContactSellerModal from '@/components/ContactSellerModal';
+import { useAuth } from '@/lib/hooks/use-auth';
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
+  const { user } = useAuth();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -19,6 +21,9 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
+  // 본인의 상품인지 확인
+  const isOwner = user && product && user.uid === product.sellerId;
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -204,7 +209,18 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
             {/* 버튼 영역 */}
             <div className="space-y-3 mb-6">
-              {product.isAvailable ? (
+              {isOwner ? (
+                /* 본인 상품일 경우 수정 버튼 표시 */
+                <Link
+                  href={`/products/${product.id}/edit`}
+                  className="w-full px-6 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  상품 수정
+                </Link>
+              ) : product.isAvailable ? (
                 <>
                   <button
                     onClick={() => setIsInquiryModalOpen(true)}

@@ -18,6 +18,7 @@ export default function ProductsPage() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
+  const myProductsParam = searchParams.get('myProducts');
 
   useEffect(() => {
     const unsubscribe = ProductService.subscribeToProducts((data) => {
@@ -37,7 +38,11 @@ export default function ProductsPage() {
     // 카테고리 필터
     const matchesCategory = !categoryParam || product.category === categoryParam;
 
-    return matchesSearch && matchesCategory;
+    // 내 상품 필터 (도매상이 본인의 상품만 보기)
+    const matchesMyProducts = !myProductsParam ||
+      (user?.uid && product.sellerId === user.uid);
+
+    return matchesSearch && matchesCategory && matchesMyProducts;
   });
 
   const canCreateProduct = user?.userType === UserType.WHOLESALER &&
@@ -48,10 +53,18 @@ export default function ProductsPage() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            {categoryParam ? `${categoryParam} 상품` : '중고 컴퓨터 상품 목록'}
+            {myProductsParam
+              ? '내 상품 관리'
+              : categoryParam
+              ? `${categoryParam} 상품`
+              : '중고 컴퓨터 상품 목록'}
           </h1>
           <p className="mt-2 text-gray-600">
-            {categoryParam ? `검증된 도매상의 ${categoryParam}` : '검증된 도매상의 중고 컴퓨터'}
+            {myProductsParam
+              ? '등록한 상품을 수정하거나 삭제할 수 있습니다'
+              : categoryParam
+              ? `검증된 도매상의 ${categoryParam}`
+              : '검증된 도매상의 중고 컴퓨터'}
           </p>
         </div>
         {canCreateProduct && (

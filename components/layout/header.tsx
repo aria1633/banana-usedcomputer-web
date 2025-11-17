@@ -68,19 +68,21 @@ export function Header() {
 
   return (
     <>
-      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
+      <header className="glass border-b border-white/20 sticky top-0 z-50 shadow-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* 상단 바 */}
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-20">
             {/* 로고 */}
-            <Link href="/" className="flex items-center">
-              <h1 className="text-2xl font-bold text-primary">
-                🍌 바나나 중고컴퓨터
+            <Link href="/" className="flex items-center group">
+              <h1 className="text-3xl font-bold">
+                <span className="text-gradient transition-all group-hover:scale-105 inline-block">
+                  🍌 바나나 중고컴퓨터
+                </span>
               </h1>
             </Link>
 
             {/* 네비게이션 */}
-            <nav className="flex items-center gap-6">
+            <nav className="flex items-center gap-6 text-lg">
               {!isLoading ? (
                 <>
                   {user ? (
@@ -88,19 +90,28 @@ export function Header() {
                       {/* 로그인 상태 */}
                       <Link
                         href="/products"
-                        className="text-gray-700 hover:text-primary transition"
+                        className="text-gray-700 hover:text-primary transition-all font-medium relative group"
                       >
                         상품 목록
+                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
                       </Link>
 
                       {/* 사용자 타입별 메뉴 */}
                       {user.userType === UserType.ADMIN && (
-                        <Link
-                          href="/admin/dashboard"
-                          className="text-gray-700 hover:text-primary transition"
-                        >
-                          관리자
-                        </Link>
+                        <>
+                          <Link
+                            href="/admin/dashboard"
+                            className="text-gray-700 hover:text-primary transition"
+                          >
+                            관리자
+                          </Link>
+                          <Link
+                            href="/admin/banners"
+                            className="text-gray-700 hover:text-primary transition"
+                          >
+                            배너관리
+                          </Link>
+                        </>
                       )}
 
                       {user.userType === UserType.WHOLESALER &&
@@ -165,7 +176,7 @@ export function Header() {
                       </Link>
                       <Link
                         href="/signup"
-                        className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition font-medium"
+                        className="px-6 py-2.5 gradient-primary text-white rounded-lg hover:shadow-lg transition-all font-medium hover:scale-105"
                       >
                         회원가입
                       </Link>
@@ -179,25 +190,35 @@ export function Header() {
           </div>
 
           {/* 카테고리 메뉴 (옵션) */}
-          <div className="border-t py-3">
-            <div className="flex gap-6 text-sm">
-              <Link href="/" className="text-gray-700 hover:text-primary transition">
+          <div className="border-t border-gray-200/50 py-4">
+            <div className="flex gap-8 text-lg">
+              <Link href="/" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
                 전체상품
+                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
               </Link>
-              <Link href="/sell-requests" className="text-gray-700 hover:text-primary transition">
+              <Link href="/sell-requests" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
                 매입요청
+                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
               </Link>
-              <Link href="/products?category=노트북" className="text-gray-700 hover:text-primary transition">
+              <Link href="/products?category=노트북" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
                 노트북
+                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
               </Link>
-              <Link href="/products?category=데스크탑" className="text-gray-700 hover:text-primary transition">
+              <Link href="/products?category=데스크탑" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
                 데스크탑
+                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
               </Link>
-              <Link href="/products?category=모니터" className="text-gray-700 hover:text-primary transition">
+              <Link href="/products?category=모니터" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
                 모니터
+                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
               </Link>
-              <Link href="/products?category=부품" className="text-gray-700 hover:text-primary transition">
+              <Link href="/products?category=스마트폰" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
+                스마트폰
+                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
+              </Link>
+              <Link href="/products?category=부품" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
                 부품
+                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
               </Link>
             </div>
           </div>

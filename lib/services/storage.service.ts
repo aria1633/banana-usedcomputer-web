@@ -38,6 +38,36 @@ export class StorageService {
   }
 
   /**
+   * 배너 이미지 업로드
+   */
+  static async uploadBannerImage(file: File): Promise<string> {
+    try {
+      console.log('[StorageService] Uploading banner image via API...');
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload-banner', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || '업로드 실패');
+      }
+
+      const data = await response.json();
+      console.log('[StorageService] Banner image uploaded:', data.url);
+
+      return data.url;
+    } catch (error: any) {
+      console.error('[StorageService] Banner upload error:', error);
+      throw new Error(`배너 이미지 업로드 실패: ${error.message}`);
+    }
+  }
+
+  /**
    * 파일 유효성 검사
    */
   static validateFile(

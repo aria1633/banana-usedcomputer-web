@@ -1,7 +1,7 @@
 // lib/services/sell-request.service.ts
 
 import { supabase } from '@/lib/supabase/config';
-import { SellRequest, SellRequestStatus } from '@/types/sell-request';
+import { SellRequest, SellRequestStatus, SellRequestCategory } from '@/types/sell-request';
 import { PurchaseOffer } from '@/types/purchase-offer';
 
 export class SellRequestService {
@@ -28,6 +28,7 @@ export class SellRequestService {
         description: requestData.description,
         image_urls: requestData.imageUrls,
         desired_price: requestData.desiredPrice,
+        category: requestData.category,
         status: requestData.status,
         created_at: requestData.createdAt.toISOString(),
       };
@@ -826,6 +827,7 @@ export class SellRequestService {
       description: data.description as string,
       imageUrls: data.image_urls as string[],
       desiredPrice: (data.desired_price as string) ?? null,
+      category: (data.category as SellRequestCategory) ?? SellRequestCategory.COMPUTER,
       status: data.status as SellRequestStatus,
       selectedWholesalerId: (data.selected_wholesaler_id as string) ?? null,
       createdAt: new Date(data.created_at as string),

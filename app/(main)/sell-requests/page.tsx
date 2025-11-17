@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SellRequest, SellRequestStatus } from '@/types/sell-request';
+import { SellRequest, SellRequestStatus, SellRequestCategory } from '@/types/sell-request';
 import { SellRequestService } from '@/lib/services/sell-request.service';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,6 +14,7 @@ export default function SellRequestsPage() {
   const [sellRequests, setSellRequests] = useState<SellRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const [selectedCategory, setSelectedCategory] = useState<SellRequestCategory | 'all'>('all');
   const { user } = useAuth();
 
   useEffect(() => {
@@ -37,6 +38,11 @@ export default function SellRequestsPage() {
   const canCreateRequest = user?.userType === UserType.NORMAL;
   const isWholesaler = user?.userType === UserType.WHOLESALER &&
                        user?.verificationStatus === VerificationStatus.APPROVED;
+
+  // 카테고리 필터링
+  const filteredSellRequests = selectedCategory === 'all'
+    ? sellRequests
+    : sellRequests.filter(request => request.category === selectedCategory);
 
   if (loading) {
     return (
@@ -92,7 +98,41 @@ export default function SellRequestsPage() {
         </div>
       )}
 
-      {sellRequests.length === 0 ? (
+      {/* 카테고리 필터 */}
+      <div className="mb-6 flex gap-2">
+        <button
+          onClick={() => setSelectedCategory('all')}
+          className={`px-4 py-2 rounded-lg transition ${
+            selectedCategory === 'all'
+              ? 'bg-primary text-white'
+              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+          }`}
+        >
+          전체
+        </button>
+        <button
+          onClick={() => setSelectedCategory(SellRequestCategory.COMPUTER)}
+          className={`px-4 py-2 rounded-lg transition ${
+            selectedCategory === SellRequestCategory.COMPUTER
+              ? 'bg-primary text-white'
+              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+          }`}
+        >
+          컴퓨터 관련
+        </button>
+        <button
+          onClick={() => setSelectedCategory(SellRequestCategory.SMARTPHONE)}
+          className={`px-4 py-2 rounded-lg transition ${
+            selectedCategory === SellRequestCategory.SMARTPHONE
+              ? 'bg-primary text-white'
+              : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+          }`}
+        >
+          스마트폰
+        </button>
+      </div>
+
+      {filteredSellRequests.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg shadow">
           <div className="text-6xl mb-4">💰</div>
           <p className="text-xl text-gray-500 mb-2">진행 중인 매입 요청이 없습니다</p>
@@ -113,10 +153,15 @@ export default function SellRequestsPage() {
       ) : (
         <>
           <div className="mb-4 text-sm text-gray-600">
-            총 {sellRequests.length}개의 진행 중인 요청
+            총 {filteredSellRequests.length}개의 진행 중인 요청
+            {selectedCategory !== 'all' && (
+              <span className="ml-2 text-gray-400">
+                (전체 {sellRequests.length}개)
+              </span>
+            )}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sellRequests.map((request) => (
+            {filteredSellRequests.map((request) => (
               <Link
                 key={request.id}
                 href={`/sell-requests/${request.id}`}
@@ -141,13 +186,20 @@ export default function SellRequestsPage() {
                       </svg>
                     </div>
                   )}
-                  {/* 상태 배지 */}
-                  <div className="absolute top-2 left-2">
+                  {/* 상태 및 카테고리 배지 */}
+                  <div className="absolute top-2 left-2 flex gap-2">
                     <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
                       <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                       </svg>
                       입찰 진행중
+                    </span>
+                    <span className={`text-white text-xs px-2 py-1 rounded-full ${
+                      request.category === SellRequestCategory.SMARTPHONE
+                        ? 'bg-purple-500'
+                        : 'bg-blue-500'
+                    }`}>
+                      {request.category === SellRequestCategory.SMARTPHONE ? '📱 스마트폰' : '💻 컴퓨터'}
                     </span>
                   </div>
                 </div>

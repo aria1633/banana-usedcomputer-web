@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/use-auth';
 import { SellRequestService } from '@/lib/services/sell-request.service';
 import { StorageService } from '@/lib/services/storage.service';
-import { SellRequestStatus } from '@/types/sell-request';
+import { SellRequestStatus, SellRequestCategory } from '@/types/sell-request';
 import { UserType } from '@/types/user';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
@@ -25,6 +25,7 @@ export default function NewSellRequestPage() {
   }, []);
 
   // 폼 데이터
+  const [category, setCategory] = useState<SellRequestCategory>(SellRequestCategory.COMPUTER);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [desiredPrice, setDesiredPrice] = useState('');
@@ -142,6 +143,7 @@ export default function NewSellRequestPage() {
           description: description.trim(),
           imageUrls,
           desiredPrice: desiredPrice.trim() || null,
+          category,
           status: SellRequestStatus.OPEN,
           createdAt: new Date(),
         },
@@ -203,7 +205,7 @@ export default function NewSellRequestPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">매입 요청 등록</h1>
         <p className="mt-2 text-gray-600">
-          판매하고자 하는 중고 컴퓨터의 정보를 입력해주세요. 도매상들이 매입 가격을 제시합니다.
+          판매하고자 하는 제품의 정보를 입력해주세요. 도매상들이 매입 가격을 제시합니다.
         </p>
       </div>
 
@@ -215,6 +217,84 @@ export default function NewSellRequestPage() {
           </div>
         )}
 
+        {/* 카테고리 선택 */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            카테고리 <span className="text-red-500">*</span>
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label
+              className={`relative flex items-center p-4 border-2 rounded-lg cursor-pointer transition ${
+                category === SellRequestCategory.COMPUTER
+                  ? 'border-primary bg-blue-50'
+                  : 'border-gray-300 hover:border-gray-400'
+              }`}
+            >
+              <input
+                type="radio"
+                name="category"
+                value={SellRequestCategory.COMPUTER}
+                checked={category === SellRequestCategory.COMPUTER}
+                onChange={(e) => setCategory(e.target.value as SellRequestCategory)}
+                className="sr-only"
+                disabled={loading}
+              />
+              <div className="flex items-center">
+                <div
+                  className={`flex-shrink-0 w-5 h-5 rounded-full border-2 mr-3 ${
+                    category === SellRequestCategory.COMPUTER
+                      ? 'border-primary bg-primary'
+                      : 'border-gray-400'
+                  }`}
+                >
+                  {category === SellRequestCategory.COMPUTER && (
+                    <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                  )}
+                </div>
+                <div>
+                  <div className="font-medium text-gray-900">컴퓨터 관련 기기 및 부품</div>
+                  <div className="text-sm text-gray-500">노트북, 데스크탑, 모니터, 키보드 등</div>
+                </div>
+              </div>
+            </label>
+
+            <label
+              className={`relative flex items-center p-4 border-2 rounded-lg cursor-pointer transition ${
+                category === SellRequestCategory.SMARTPHONE
+                  ? 'border-primary bg-blue-50'
+                  : 'border-gray-300 hover:border-gray-400'
+              }`}
+            >
+              <input
+                type="radio"
+                name="category"
+                value={SellRequestCategory.SMARTPHONE}
+                checked={category === SellRequestCategory.SMARTPHONE}
+                onChange={(e) => setCategory(e.target.value as SellRequestCategory)}
+                className="sr-only"
+                disabled={loading}
+              />
+              <div className="flex items-center">
+                <div
+                  className={`flex-shrink-0 w-5 h-5 rounded-full border-2 mr-3 ${
+                    category === SellRequestCategory.SMARTPHONE
+                      ? 'border-primary bg-primary'
+                      : 'border-gray-400'
+                  }`}
+                >
+                  {category === SellRequestCategory.SMARTPHONE && (
+                    <div className="w-full h-full rounded-full bg-white scale-50"></div>
+                  )}
+                </div>
+                <div>
+                  <div className="font-medium text-gray-900">스마트폰</div>
+                  <div className="text-sm text-gray-500">아이폰, 갤럭시, 태블릿 등</div>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
         {/* 제목 */}
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
@@ -225,7 +305,11 @@ export default function NewSellRequestPage() {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="예: 삼성 노트북 갤럭시북 Pro"
+            placeholder={
+              category === SellRequestCategory.COMPUTER
+                ? "예: 삼성 노트북 갤럭시북 Pro"
+                : "예: 아이폰 14 Pro 256GB"
+            }
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
             required
             disabled={loading}

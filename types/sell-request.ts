@@ -3,6 +3,21 @@
 // 이 파일은 일반 사용자가 중고 컴퓨터 매입을 요청하는 역경매 시스템의 데이터 모델을 정의합니다.
 
 /**
+ * 매입 요청 카테고리 열거형
+ *
+ * 사용자가 매입 요청할 수 있는 제품의 카테고리를 정의합니다.
+ *
+ * @enum {string}
+ *
+ * - COMPUTER: 컴퓨터 관련 기기 및 부품 (노트북, 데스크탑, 모니터, 키보드, 마우스 등)
+ * - SMARTPHONE: 스마트폰 및 태블릿
+ */
+export enum SellRequestCategory {
+  COMPUTER = 'computer',     // 컴퓨터 관련 기기 및 부품
+  SMARTPHONE = 'smartphone', // 스마트폰 및 태블릿
+}
+
+/**
  * 매입 요청 상태 열거형
  * 
  * 일반 사용자가 등록한 매입 요청의 현재 진행 상태를 나타냅니다.
@@ -197,7 +212,7 @@ export interface SellRequest {
 
   /**
    * 희망 매입가 (선택 사항)
-   * 
+   *
    * - 사용자가 원하는 매입 가격 또는 가격대
    * - 문자열 타입으로 자유롭게 입력 가능
    * - 정확한 금액이 아닌 대략적인 기대치를 적을 수 있음
@@ -205,16 +220,33 @@ export interface SellRequest {
    * - 입력하지 않아도 됨 (null 가능)
    * - 이 값은 참고용이며, 실제 매입가는 도매상들이 제시
    * - 너무 높게 적으면 제안이 오지 않을 수 있음
-   * 
+   *
    * @type {string | null | undefined}
    * @optional
-   * 
+   *
    * @example
    * "1,000,000원 이상 희망"
    * "80만원~100만원 사이"
    * null  // 희망가 미입력
    */
   desiredPrice?: string | null;
+
+  /**
+   * 매입 요청 카테고리
+   *
+   * - SellRequestCategory enum 값 중 하나
+   * - 컴퓨터 관련 기기 또는 스마트폰 구분
+   * - 도매상들이 자신의 전문 분야에 맞는 요청을 찾을 수 있도록 도움
+   * - 카테고리별 필터링 및 통계에 사용
+   *
+   * @type {SellRequestCategory}
+   * @required
+   *
+   * @example
+   * SellRequestCategory.COMPUTER
+   * SellRequestCategory.SMARTPHONE
+   */
+  category: SellRequestCategory;
 
   /**
    * 매입 요청의 현재 상태
