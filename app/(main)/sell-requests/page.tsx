@@ -8,13 +8,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/lib/hooks/use-auth';
 import { UserType, VerificationStatus } from '@/types/user';
-import { getAccessToken } from '@/lib/utils/auth';
+import { getAccessToken, isAdmin } from '@/lib/utils/auth';
 
 export default function SellRequestsPage() {
   const [sellRequests, setSellRequests] = useState<SellRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState<SellRequestCategory | 'all'>('all');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -38,6 +39,34 @@ export default function SellRequestsPage() {
   const canCreateRequest = user?.userType === UserType.NORMAL;
   const isWholesaler = user?.userType === UserType.WHOLESALER &&
                        user?.verificationStatus === VerificationStatus.APPROVED;
+  const isAdminUser = isAdmin(user);
+
+  const handleDelete = async (requestId: string, e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!confirm('이 매입 요청을 삭제하시겠습니까?')) {
+      return;
+    }
+
+    setDeletingId(requestId);
+    try {
+      const accessToken = getAccessToken();
+      if (!accessToken) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+
+      await SellRequestService.deleteSellRequest(requestId, accessToken);
+      setSellRequests(prev => prev.filter(r => r.id !== requestId));
+      alert('삭제되었습니다.');
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('삭제 중 오류가 발생했습니다.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   // 카테고리 필터링
   const filteredSellRequests = selectedCategory === 'all'
@@ -162,47 +191,68 @@ export default function SellRequestsPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSellRequests.map((request) => (
-              <Link
-                key={request.id}
-                href={`/sell-requests/${request.id}`}
-                className="bg-white rounded-lg shadow hover:shadow-xl transition-shadow overflow-hidden group"
-              >
-                <div className="aspect-video bg-gray-200 relative overflow-hidden">
-                  {request.imageUrls[0] && !imageErrors.has(request.id) ? (
-                    <Image
-                      src={request.imageUrls[0]}
-                      alt={request.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      unoptimized
-                      onError={() => {
-                        setImageErrors(prev => new Set(prev).add(request.id));
-                      }}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-gray-400">
-                      <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
+              <div key={request.id} className="relative">
+                <Link
+                  href={`/sell-requests/${request.id}`}
+                  className="block bg-white rounded-lg shadow hover:shadow-xl transition-shadow overflow-hidden group"
+                >
+                  <div className="aspect-video bg-gray-200 relative overflow-hidden">
+                    {request.imageUrls[0] && !imageErrors.has(request.id) ? (
+                      <Image
+                        src={request.imageUrls[0]}
+                        alt={request.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        unoptimized
+                        onError={() => {
+                          setImageErrors(prev => new Set(prev).add(request.id));
+                        }}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-gray-400">
+                        <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                    {/* 상태 및 카테고리 배지 */}
+                    <div className="absolute top-2 left-2 flex gap-2">
+                      <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                        </svg>
+                        입찰 진행중
+                      </span>
+                      <span className={`text-white text-xs px-2 py-1 rounded-full ${
+                        request.category === SellRequestCategory.SMARTPHONE
+                          ? 'bg-purple-500'
+                          : 'bg-blue-500'
+                      }`}>
+                        {request.category === SellRequestCategory.SMARTPHONE ? '📱 스마트폰' : '💻 컴퓨터'}
+                      </span>
                     </div>
-                  )}
-                  {/* 상태 및 카테고리 배지 */}
-                  <div className="absolute top-2 left-2 flex gap-2">
-                    <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                      </svg>
-                      입찰 진행중
-                    </span>
-                    <span className={`text-white text-xs px-2 py-1 rounded-full ${
-                      request.category === SellRequestCategory.SMARTPHONE
-                        ? 'bg-purple-500'
-                        : 'bg-blue-500'
-                    }`}>
-                      {request.category === SellRequestCategory.SMARTPHONE ? '📱 스마트폰' : '💻 컴퓨터'}
-                    </span>
+                    {/* 관리자 삭제 버튼 */}
+                    {isAdminUser && (
+                      <div className="absolute top-2 right-2">
+                        <button
+                          onClick={(e) => handleDelete(request.id, e)}
+                          disabled={deletingId === request.id}
+                          className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                          title="삭제"
+                        >
+                          {deletingId === request.id ? (
+                            <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                          ) : (
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    )}
                   </div>
-                </div>
                 <div className="p-4">
                   <h3 className="font-semibold text-lg text-gray-900 line-clamp-1 group-hover:text-primary transition">
                     {request.title}
@@ -230,6 +280,7 @@ export default function SellRequestsPage() {
                   </div>
                 </div>
               </Link>
+            </div>
             ))}
           </div>
         </>
