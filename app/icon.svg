@@ -1,0 +1,18 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Yellow background -->
+  <rect width="64" height="64" rx="12" fill="#FCD34D"/>
+
+  <!-- Computer/Monitor icon centered -->
+  <g transform="translate(12, 16)">
+    <!-- Monitor screen -->
+    <rect x="0" y="0" width="40" height="26" rx="2" fill="#1F2937"/>
+    <rect x="2" y="2" width="36" height="22" fill="#3B82F6"/>
+
+    <!-- Screen detail line -->
+    <rect x="2" y="20" width="36" height="1" fill="#2563EB" opacity="0.5"/>
+
+    <!-- Monitor stand -->
+    <rect x="14" y="26" width="12" height="4" fill="#374151"/>
+    <rect x="8" y="30" width="24" height="3" rx="1.5" fill="#4B5563"/>
+  </g>
+</svg>
