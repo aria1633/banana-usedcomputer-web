@@ -2,21 +2,31 @@
 'use client';
 
 import { useAuth } from '@/lib/hooks/use-auth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { AuthService } from '@/lib/services/auth.service';
 import { useAuthStore } from '@/lib/store/auth.store';
 import { UserType, VerificationStatus } from '@/types/user';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { HeaderMobile } from '@/components/mobile/header-mobile';
 
-export function Header() {
+function HeaderContent() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { setUser } = useAuthStore();
   const [showRejectionBanner, setShowRejectionBanner] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   console.log('[Header] Rendering with:', { hasUser: !!user, isLoading });
+
+  // URL의 검색어 파라미터 로드
+  useEffect(() => {
+    const keyword = searchParams.get('search');
+    if (keyword) {
+      setSearchKeyword(keyword);
+    }
+  }, [searchParams]);
 
   // 거부 사유 알림 배너 표시 여부 확인
   useEffect(() => {
@@ -64,6 +74,15 @@ export function Header() {
       // 에러가 발생해도 클라이언트 측 상태는 클리어
       setUser(null);
       router.push('/');
+    }
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchKeyword.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchKeyword.trim())}`);
+    } else {
+      router.push('/products');
     }
   };
 
@@ -202,37 +221,62 @@ export function Header() {
             </nav>
           </div>
 
-          {/* 카테고리 메뉴 (옵션) */}
+          {/* 검색바 및 카테고리 메뉴 */}
           <div className="border-t border-gray-200/50 py-4">
-            <div className="flex gap-8 text-lg">
-              <Link href="/" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
-                전체상품
-                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
-              </Link>
-              <Link href="/sell-requests" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
-                매입요청
-                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
-              </Link>
-              <Link href="/products?category=노트북" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
-                노트북
-                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
-              </Link>
-              <Link href="/products?category=데스크탑" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
-                데스크탑
-                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
-              </Link>
-              <Link href="/products?category=모니터" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
-                모니터
-                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
-              </Link>
-              <Link href="/products?category=스마트폰" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
-                스마트폰
-                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
-              </Link>
-              <Link href="/products?category=부품" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
-                부품
-                <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
-              </Link>
+            <div className="flex items-center justify-between gap-8">
+              {/* 카테고리 링크 */}
+              <div className="flex gap-8 text-lg">
+                <Link href="/" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
+                  전체상품
+                  <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
+                </Link>
+                <Link href="/sell-requests" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
+                  매입요청
+                  <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
+                </Link>
+                <Link href="/products?category=노트북" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
+                  노트북
+                  <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
+                </Link>
+                <Link href="/products?category=데스크탑" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
+                  데스크탑
+                  <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
+                </Link>
+                <Link href="/products?category=모니터" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
+                  모니터
+                  <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
+                </Link>
+                <Link href="/products?category=스마트폰" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
+                  스마트폰
+                  <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
+                </Link>
+                <Link href="/products?category=부품" className="text-gray-700 hover:text-primary transition-all font-medium relative group">
+                  부품
+                  <span className="absolute -bottom-3 left-0 w-0 h-0.5 bg-gradient-primary group-hover:w-full transition-all duration-300"></span>
+                </Link>
+              </div>
+
+              {/* 검색바 */}
+              <form onSubmit={handleSearch} className="flex-shrink-0">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)}
+                    placeholder="상품 검색..."
+                    className="w-80 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition"
+                    aria-label="검색"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -288,5 +332,21 @@ export function Header() {
         </div>
       )}
     </>
+  );
+}
+
+export function Header() {
+  return (
+    <Suspense fallback={
+      <header className="glass border-b border-white/20 sticky top-0 z-50 shadow-soft">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="text-2xl font-bold text-gradient">🍌 바나나 중고컴퓨터</div>
+          </div>
+        </div>
+      </header>
+    }>
+      <HeaderContent />
+    </Suspense>
   );
 }

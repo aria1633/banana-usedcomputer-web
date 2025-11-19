@@ -3,6 +3,8 @@
 import { Product } from '@/types/product';
 import { logger } from '@/lib/utils/logger';
 import { fetchWithAuth, get, post, patch, del, getCount } from '@/lib/utils/fetch';
+import { StorageService } from '@/lib/services/storage.service';
+import { getAccessToken } from '@/lib/utils/auth';
 
 export class ProductService {
   private static COLLECTION = 'products';
@@ -197,12 +199,45 @@ export class ProductService {
 
   /**
    * 상품 삭제 (Delete)
+   * 이미지 파일과 데이터베이스 레코드를 함께 삭제
    */
   static async deleteProduct(productId: string): Promise<void> {
     try {
       logger.group('ProductService.deleteProduct');
       logger.info('Deleting product', { productId });
 
+      // 1. 먼저 상품 정보를 조회하여 이미지 URL 가져오기
+      const product = await this.getProduct(productId);
+
+      if (!product) {
+        logger.warn('Product not found', { productId });
+        throw new Error('삭제할 상품을 찾을 수 없습니다.');
+      }
+
+      logger.info('Product found, image count:', { count: product.imageUrls?.length || 0 });
+
+      // 2. Storage에서 이미지 삭제
+      if (product.imageUrls && product.imageUrls.length > 0) {
+        try {
+          const accessToken = getAccessToken();
+          if (!accessToken) {
+            logger.warn('No access token, skipping image deletion');
+          } else {
+            logger.info('Deleting images from storage', { urls: product.imageUrls });
+            await StorageService.deleteImages(
+              product.imageUrls,
+              'product-images',
+              accessToken
+            );
+            logger.info('Images deleted successfully');
+          }
+        } catch (imageError) {
+          // 이미지 삭제 실패해도 계속 진행 (데이터는 삭제)
+          logger.error('Failed to delete images, but continuing', { error: imageError });
+        }
+      }
+
+      // 3. 데이터베이스에서 상품 레코드 삭제
       await del(`/rest/v1/${this.COLLECTION}?id=eq.${productId}`, {
         requireAuth: true,
       });
@@ -233,6 +268,32 @@ export class ProductService {
     } catch (error) {
       logger.error('getProductCountBySeller error', { error, sellerId });
       return 0;
+    }
+  }
+
+  /**
+   * 상품 검색 (Search)
+   */
+  static async searchProducts(keyword: string): Promise<Product[]> {
+    try {
+      logger.info('Searching products', { keyword });
+
+      if (!keyword.trim()) {
+        return this.getAllProducts();
+      }
+
+      // Supabase의 ilike를 사용한 대소문자 구분 없는 검색
+      // title 또는 description에 키워드가 포함된 상품 검색
+      const data = await get<any[]>(
+        `/rest/v1/${this.COLLECTION}?is_available=eq.true&or=(title.ilike.*${encodeURIComponent(keyword)}*,description.ilike.*${encodeURIComponent(keyword)}*)&order=created_at.desc`
+      );
+
+      logger.info('Search results', { count: data.length, keyword });
+
+      return data.map((item: any) => this.mapToProduct(item));
+    } catch (error) {
+      logger.error('searchProducts error', { error, keyword });
+      throw new Error(`상품 검색 실패: ${error}`);
     }
   }
 

@@ -21,22 +21,40 @@ export default function ProductsPage() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
   const myProductsParam = searchParams.get('myProducts');
+  const searchParam = searchParams.get('search');
 
+  // URL에서 검색어 가져오기
   useEffect(() => {
-    const unsubscribe = ProductService.subscribeToProducts((data) => {
-      setProducts(data);
-      setLoading(false);
-    });
+    if (searchParam) {
+      setSearchTerm(searchParam);
+    }
+  }, [searchParam]);
 
-    return () => unsubscribe();
-  }, []);
+  // 상품 로드 (검색어가 있으면 검색, 없으면 전체 조회)
+  useEffect(() => {
+    const loadProducts = async () => {
+      setLoading(true);
+      try {
+        let data: Product[];
+        if (searchParam) {
+          // URL의 검색 파라미터로 검색
+          data = await ProductService.searchProducts(searchParam);
+        } else {
+          // 전체 상품 조회
+          data = await ProductService.getAllProducts();
+        }
+        setProducts(data);
+      } catch (error) {
+        console.error('Failed to load products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, [searchParam]);
 
   const filteredProducts = products.filter((product) => {
-    // 검색어 필터
-    const matchesSearch = !searchTerm ||
-      product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase());
-
     // 카테고리 필터
     const matchesCategory = !categoryParam || product.category === categoryParam;
 
@@ -44,7 +62,7 @@ export default function ProductsPage() {
     const matchesMyProducts = !myProductsParam ||
       (user?.uid && product.sellerId === user.uid);
 
-    return matchesSearch && matchesCategory && matchesMyProducts;
+    return matchesCategory && matchesMyProducts;
   });
 
   const canCreateProduct = user?.userType === UserType.WHOLESALER &&

@@ -3,6 +3,7 @@
 import { supabase } from '@/lib/supabase/config';
 import { SellRequest, SellRequestStatus, SellRequestCategory } from '@/types/sell-request';
 import { PurchaseOffer } from '@/types/purchase-offer';
+import { StorageService } from '@/lib/services/storage.service';
 
 export class SellRequestService {
   private static SELL_REQUESTS_COLLECTION = 'sell_requests';
@@ -560,6 +561,7 @@ export class SellRequestService {
 
   /**
    * 매입 요청 삭제 (관리자 전용) - Fetch API 사용
+   * 이미지 파일과 데이터베이스 레코드를 함께 삭제
    */
   static async deleteSellRequest(requestId: string, accessToken: string): Promise<void> {
     try {
@@ -568,6 +570,33 @@ export class SellRequestService {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
       const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+      // 1. 먼저 매입 요청 정보를 조회하여 이미지 URL 가져오기
+      const sellRequest = await this.getSellRequest(requestId, accessToken);
+
+      if (!sellRequest) {
+        console.warn('[SellRequestService] Sell request not found:', requestId);
+        throw new Error('삭제할 매입 요청을 찾을 수 없습니다.');
+      }
+
+      console.log('[SellRequestService] Sell request found, image count:', sellRequest.imageUrls?.length || 0);
+
+      // 2. Storage에서 이미지 삭제
+      if (sellRequest.imageUrls && sellRequest.imageUrls.length > 0) {
+        try {
+          console.log('[SellRequestService] Deleting images from storage:', sellRequest.imageUrls);
+          await StorageService.deleteImages(
+            sellRequest.imageUrls,
+            'sell-request-images',
+            accessToken
+          );
+          console.log('[SellRequestService] Images deleted successfully');
+        } catch (imageError) {
+          // 이미지 삭제 실패해도 계속 진행 (데이터는 삭제)
+          console.error('[SellRequestService] Failed to delete images, but continuing:', imageError);
+        }
+      }
+
+      // 3. 데이터베이스에서 매입 요청 레코드 삭제
       const response = await fetch(
         `${supabaseUrl}/rest/v1/${this.SELL_REQUESTS_COLLECTION}?id=eq.${requestId}`,
         {

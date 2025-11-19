@@ -2,19 +2,30 @@
 'use client';
 
 import { useAuth } from '@/lib/hooks/use-auth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { AuthService } from '@/lib/services/auth.service';
 import { useAuthStore } from '@/lib/store/auth.store';
 import { UserType, VerificationStatus } from '@/types/user';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 
-export function HeaderMobile() {
+function HeaderMobileContent() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { setUser } = useAuthStore();
   const [showRejectionBanner, setShowRejectionBanner] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  // URL의 검색어 파라미터 로드
+  useEffect(() => {
+    const keyword = searchParams.get('search');
+    if (keyword) {
+      setSearchKeyword(keyword);
+    }
+  }, [searchParams]);
 
   // 거부 사유 알림 배너 표시 여부 확인
   useEffect(() => {
@@ -63,6 +74,17 @@ export function HeaderMobile() {
     setIsMenuOpen(false);
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchKeyword.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchKeyword.trim())}`);
+      setIsSearchOpen(false);
+    } else {
+      router.push('/products');
+      setIsSearchOpen(false);
+    }
+  };
+
   // 메뉴가 열려있을 때 body 스크롤 방지
   useEffect(() => {
     if (isMenuOpen) {
@@ -87,23 +109,70 @@ export function HeaderMobile() {
               </h1>
             </Link>
 
-            {/* 햄버거 메뉴 버튼 */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              aria-label="메뉴"
-            >
-              {isMenuOpen ? (
-                <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
+            {/* 검색 및 메뉴 버튼 */}
+            <div className="flex items-center gap-2">
+              {/* 검색 버튼 */}
+              <button
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                aria-label="검색"
+              >
+                {isSearchOpen ? (
+                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                )}
+              </button>
+
+              {/* 햄버거 메뉴 버튼 */}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                aria-label="메뉴"
+              >
+                {isMenuOpen ? (
+                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* 검색바 (토글) */}
+          {isSearchOpen && (
+            <div className="mt-3 pb-1">
+              <form onSubmit={handleSearch}>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)}
+                    placeholder="상품 검색..."
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                    autoFocus
+                  />
+                  <button
+                    type="submit"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition"
+                    aria-label="검색"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
         </div>
       </header>
 
@@ -394,5 +463,21 @@ export function HeaderMobile() {
         </div>
       )}
     </>
+  );
+}
+
+export function HeaderMobile() {
+  return (
+    <Suspense fallback={
+      <header className="glass border-b border-white/20 sticky top-0 z-50 shadow-soft">
+        <div className="px-4 py-3">
+          <div className="flex justify-between items-center">
+            <div className="text-xl font-bold text-gradient">🍌 바나나</div>
+          </div>
+        </div>
+      </header>
+    }>
+      <HeaderMobileContent />
+    </Suspense>
   );
 }
