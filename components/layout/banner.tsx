@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Banner as BannerType } from '@/types/banner';
 import { BannerService } from '@/lib/services/banner.service';
+import { BannerMobile } from '@/components/mobile/banner-mobile';
 
 // 기본 배너 (데이터베이스에 배너가 없을 경우)
 const DEFAULT_BANNER: BannerType = {
@@ -92,9 +93,16 @@ export function Banner() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="bg-gray-200 animate-pulse rounded-2xl h-64"></div>
-      </div>
+      <>
+        {/* 모바일 로딩 */}
+        <div className="lg:hidden px-4 mt-4">
+          <div className="bg-gray-200 animate-pulse rounded-xl h-48"></div>
+        </div>
+        {/* 데스크탑 로딩 */}
+        <div className="hidden lg:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+          <div className="bg-gray-200 animate-pulse rounded-2xl h-64"></div>
+        </div>
+      </>
     );
   }
 
@@ -102,7 +110,14 @@ export function Banner() {
   const isDefault = currentBanner.id === 'default';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <>
+      {/* 모바일 배너 */}
+      <div className="lg:hidden">
+        <BannerMobile />
+      </div>
+
+      {/* 데스크탑 배너 */}
+      <div className="hidden lg:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
       <div className="relative overflow-hidden">
         {/* 배너 컨텐츠 */}
         <div className="relative">
@@ -266,6 +281,7 @@ export function Banner() {
           </>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }

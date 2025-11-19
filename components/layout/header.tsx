@@ -8,6 +8,7 @@ import { AuthService } from '@/lib/services/auth.service';
 import { useAuthStore } from '@/lib/store/auth.store';
 import { UserType, VerificationStatus } from '@/types/user';
 import { useState, useEffect } from 'react';
+import { HeaderMobile } from '@/components/mobile/header-mobile';
 
 export function Header() {
   const { user, isLoading } = useAuth();
@@ -68,7 +69,13 @@ export function Header() {
 
   return (
     <>
-      <header className="glass border-b border-white/20 sticky top-0 z-50 shadow-soft">
+      {/* 모바일 헤더 */}
+      <div className="lg:hidden">
+        <HeaderMobile />
+      </div>
+
+      {/* 데스크탑 헤더 */}
+      <header className="hidden lg:block glass border-b border-white/20 sticky top-0 z-50 shadow-soft">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* 상단 바 */}
           <div className="flex justify-between items-center h-20">
@@ -104,6 +111,12 @@ export function Header() {
                             className="text-gray-700 hover:text-primary transition"
                           >
                             관리자
+                          </Link>
+                          <Link
+                            href="/admin/users"
+                            className="text-gray-700 hover:text-primary transition"
+                          >
+                            회원관리
                           </Link>
                           <Link
                             href="/admin/banners"

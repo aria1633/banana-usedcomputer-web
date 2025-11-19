@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Product } from '@/types/product';
 import { ProductService } from '@/lib/services/product.service';
+import { UserService } from '@/lib/services/user.service';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Header } from '@/components/layout/header';
@@ -17,6 +18,7 @@ export default function HomePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+  const [sellerNames, setSellerNames] = useState<Record<string, string>>({});
 
   logger.info('HomePage rendering', { productsCount: products.length, loading });
 
@@ -25,11 +27,30 @@ export default function HomePage() {
     logger.info('Setting up product subscription');
 
     // 상품 데이터 수신 시 콜백
-    const handleProductsUpdate = (data: Product[]) => {
+    const handleProductsUpdate = async (data: Product[]) => {
       logger.info('Received products from subscription', { count: data.length });
       setProducts(data);
       setLoading(false);
       logger.info('Updated state', { loading: false, productsCount: data.length });
+
+      // 판매자 정보를 실시간으로 가져오기
+      const sellerIds = [...new Set(data.map(p => p.sellerId))];
+      const names: Record<string, string> = {};
+
+      await Promise.all(
+        sellerIds.map(async (sellerId) => {
+          try {
+            const seller = await UserService.getUserByUid(sellerId);
+            if (seller) {
+              names[sellerId] = seller.name;
+            }
+          } catch (error) {
+            console.error(`Failed to fetch seller ${sellerId}:`, error);
+          }
+        })
+      );
+
+      setSellerNames(names);
     };
 
     // 구독 시작
@@ -61,7 +82,8 @@ export default function HomePage() {
               <p className="text-sm md:text-base text-gray-700 mb-4 max-w-2xl mx-auto">
                 검증된 도매상들이 경쟁적으로 가격을 제시하는 역경매 시스템
               </p>
-              <div className="flex gap-4 justify-center">
+              {/* 데스크탑 버튼 */}
+              <div className="hidden lg:flex gap-4 justify-center">
               {!user ? (
                 <>
                   <Link
@@ -81,6 +103,32 @@ export default function HomePage() {
                 <Link
                   href="/sell-requests/new"
                   className="px-8 py-4 gradient-primary text-white rounded-xl font-bold text-lg hover:shadow-xl transition-all hover:scale-105"
+                >
+                  매입 요청하기
+                </Link>
+              )}
+            </div>
+              {/* 모바일 버튼 */}
+              <div className="lg:hidden flex flex-col gap-3">
+              {!user ? (
+                <>
+                  <Link
+                    href="/signup"
+                    className="w-full px-6 py-3 gradient-primary text-white rounded-xl font-bold text-base hover:shadow-lg transition-all active:scale-95"
+                  >
+                    무료 회원가입
+                  </Link>
+                  <Link
+                    href="/products"
+                    className="w-full px-6 py-3 bg-white text-gray-900 rounded-xl font-bold text-base hover:shadow-lg transition-all active:scale-95 border-2 border-gray-200"
+                  >
+                    상품 둘러보기
+                  </Link>
+                </>
+              ) : (
+                <Link
+                  href="/sell-requests/new"
+                  className="w-full px-6 py-3 gradient-primary text-white rounded-xl font-bold text-base hover:shadow-lg transition-all active:scale-95"
                 >
                   매입 요청하기
                 </Link>
@@ -113,72 +161,149 @@ export default function HomePage() {
             <p className="text-gray-500">도매상이 상품을 등록하면 여기에 표시됩니다</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product, index) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="bg-white rounded-2xl shadow-soft hover-lift overflow-hidden group"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                  {product.imageUrls[0] && !imageErrors.has(product.id) ? (
-                    <Image
-                      src={product.imageUrls[0]}
-                      alt={product.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      unoptimized
-                      onError={() => {
-                        setImageErrors(prev => new Set(prev).add(product.id));
-                      }}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-gray-400">
-                      <svg className="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                  )}
-                  {/* 상태 배지 */}
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg backdrop-blur">
-                      판매중
-                    </span>
-                  </div>
-                  {/* 그라디언트 오버레이 */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                <div className="p-5">
-                  <h3 className="font-bold text-lg text-gray-900 line-clamp-1 group-hover:text-primary transition-colors">
-                    {product.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 line-clamp-2 mt-2 h-10 leading-relaxed">
-                    {product.description}
-                  </p>
-                  <div className="mt-5 flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold text-gradient">
-                      {product.price.toLocaleString()}
-                    </span>
-                    <span className="text-lg font-medium text-gray-600">원</span>
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gradient-primary flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">🏪</span>
+          <>
+            {/* 데스크탑 그리드 뷰 */}
+            <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {products.map((product, index) => (
+                <Link
+                  key={product.id}
+                  href={`/products/${product.id}`}
+                  className="bg-white rounded-2xl shadow-soft hover-lift overflow-hidden group"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+                    {product.imageUrls[0] && !imageErrors.has(product.id) ? (
+                      <Image
+                        src={product.imageUrls[0]}
+                        alt={product.title}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        unoptimized
+                        onError={() => {
+                          setImageErrors(prev => new Set(prev).add(product.id));
+                        }}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-gray-400">
+                        <svg className="w-20 h-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
                       </div>
-                      <span className="text-sm font-medium text-gray-700">
-                        {product.sellerName}
+                    )}
+                    <div className="absolute top-3 left-3">
+                      <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg backdrop-blur">
+                        판매중
                       </span>
                     </div>
-                    <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                      재고 {product.quantity}개
-                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                  <div className="p-5">
+                    <h3 className="font-bold text-lg text-gray-900 line-clamp-1 group-hover:text-primary transition-colors">
+                      {product.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 line-clamp-2 mt-2 h-10 leading-relaxed">
+                      {product.description}
+                    </p>
+                    <div className="mt-5 flex items-baseline gap-1">
+                      <span className="text-3xl font-extrabold text-gradient">
+                        {product.price.toLocaleString()}
+                      </span>
+                      <span className="text-lg font-medium text-gray-600">원</span>
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-gradient-primary flex items-center justify-center">
+                          <span className="text-white text-xs font-bold">🏪</span>
+                        </div>
+                        <span className="text-sm font-medium text-gray-700">
+                          {sellerNames[product.sellerId] || product.sellerName}
+                        </span>
+                      </div>
+                      <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                        재고 {product.quantity}개
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* 모바일 리스트 뷰 */}
+            <div className="lg:hidden flex flex-col gap-4">
+              {products.map((product, index) => (
+                <Link
+                  key={product.id}
+                  href={`/products/${product.id}`}
+                  className="bg-white rounded-xl shadow-soft active:scale-[0.98] transition-transform overflow-hidden"
+                >
+                  <div className="flex gap-4 p-3">
+                    {/* 이미지 - 정사각형 */}
+                    <div className="relative w-24 h-24 flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden">
+                      {product.imageUrls[0] && !imageErrors.has(product.id) ? (
+                        <Image
+                          src={product.imageUrls[0]}
+                          alt={product.title}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                          onError={() => {
+                            setImageErrors(prev => new Set(prev).add(product.id));
+                          }}
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-gray-400">
+                          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                      )}
+                      {/* 상태 배지 */}
+                      <div className="absolute top-1 left-1">
+                        <span className="bg-gradient-to-r from-green-500 to-emerald-600 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
+                          판매중
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* 정보 */}
+                    <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
+                      <div>
+                        <h3 className="font-bold text-base text-gray-900 line-clamp-1 mb-1">
+                          {product.title}
+                        </h3>
+                        <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed mb-2">
+                          {product.description}
+                        </p>
+                      </div>
+
+                      <div>
+                        <div className="flex items-baseline gap-1 mb-2">
+                          <span className="text-xl font-extrabold text-gradient">
+                            {product.price.toLocaleString()}
+                          </span>
+                          <span className="text-sm font-medium text-gray-600">원</span>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-4 h-4 rounded-full bg-gradient-primary flex items-center justify-center">
+                              <span className="text-[10px]">🏪</span>
+                            </div>
+                            <span className="text-xs font-medium text-gray-700 truncate max-w-[120px]">
+                              {sellerNames[product.sellerId] || product.sellerName}
+                            </span>
+                          </div>
+                          <span className="text-[10px] font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                            재고 {product.quantity}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </>
         )}
 
         {/* 더보기 버튼 */}
@@ -203,9 +328,16 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
               <h3 className="text-2xl font-bold mb-4 text-gradient">🍌 바나나 중고컴퓨터</h3>
-              <p className="text-gray-400 leading-relaxed">
+              <p className="text-gray-400 leading-relaxed mb-4">
                 검증된 도매상과 일반 사용자를 연결하는 중고 컴퓨터 역경매 플랫폼
               </p>
+              {/* 사업자 정보 */}
+              <div className="text-gray-400 text-sm space-y-1">
+                <p>대표: 김영남</p>
+                <p>사업자등록번호: 296-08-00820</p>
+                <p>통신판매업신고: 2021-서울구로-1261</p>
+                <p className="text-xs leading-relaxed">주소: 서울특별시 도봉구 쌍문동 삼양로 572, 1층</p>
+              </div>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">서비스</h4>
@@ -216,16 +348,33 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4">고객지원</h4>
+              <h4 className="text-lg font-semibold mb-4">고객센터</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="#" className="hover:text-white transition">공지사항</Link></li>
-                <li><Link href="#" className="hover:text-white transition">자주 묻는 질문</Link></li>
-                <li><Link href="#" className="hover:text-white transition">1:1 문의</Link></li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <a href="tel:010-6442-6375" className="hover:text-white transition">010-6442-6375</a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <a href="mailto:mrcompany4717@gmail.com" className="hover:text-white transition text-sm">mrcompany4717@gmail.com</a>
+                </li>
               </ul>
+              <div className="mt-4">
+                <h5 className="text-sm font-semibold mb-2">지원</h5>
+                <ul className="space-y-2 text-gray-400 text-sm">
+                  <li><Link href="#" className="hover:text-white transition">공지사항</Link></li>
+                  <li><Link href="#" className="hover:text-white transition">자주 묻는 질문</Link></li>
+                  <li><Link href="#" className="hover:text-white transition">1:1 문의</Link></li>
+                </ul>
+              </div>
             </div>
           </div>
           <div className="border-t border-gray-700 pt-8 text-center">
-            <p className="text-gray-500">© 2025 바나나 중고컴퓨터. All rights reserved.</p>
+            <p className="text-gray-500 text-sm">© 2025 바나나 중고컴퓨터. All rights reserved.</p>
           </div>
         </div>
       </footer>

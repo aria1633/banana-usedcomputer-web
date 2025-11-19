@@ -331,7 +331,7 @@ export default function NewProductPage() {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="제품의 사양, 상태, 포함 구성품 등을 자세히 입력해주세요."
             rows={6}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent resize-none lg:!h-80"
             required
             disabled={loading}
           />
