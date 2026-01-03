@@ -72,6 +72,26 @@ export default function BusinessNewProductPage() {
     setImagePreviews(newPreviews);
   };
 
+  const moveImageUp = (index: number) => {
+    if (index === 0) return;
+    const newImages = [...images];
+    const newPreviews = [...imagePreviews];
+    [newImages[index - 1], newImages[index]] = [newImages[index], newImages[index - 1]];
+    [newPreviews[index - 1], newPreviews[index]] = [newPreviews[index], newPreviews[index - 1]];
+    setImages(newImages);
+    setImagePreviews(newPreviews);
+  };
+
+  const moveImageDown = (index: number) => {
+    if (index === images.length - 1) return;
+    const newImages = [...images];
+    const newPreviews = [...imagePreviews];
+    [newImages[index], newImages[index + 1]] = [newImages[index + 1], newImages[index]];
+    [newPreviews[index], newPreviews[index + 1]] = [newPreviews[index + 1], newPreviews[index]];
+    setImages(newImages);
+    setImagePreviews(newPreviews);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -364,22 +384,72 @@ export default function BusinessNewProductPage() {
           </div>
 
           {imagePreviews.length > 0 && (
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-              {imagePreviews.map((preview, index) => (
-                <div key={index} className="relative group aspect-square">
-                  <Image src={preview} alt={`Preview ${index + 1}`} fill className="object-cover rounded-lg" />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
-                    disabled={loading}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              ))}
+            <div className="mt-4">
+              <p className="text-sm text-gray-500 mb-2">
+                첫 번째 이미지가 대표 이미지(썸네일)로 사용됩니다. 화살표 버튼으로 순서를 변경하세요.
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                {imagePreviews.map((preview, index) => (
+                  <div key={index} className="relative group aspect-square">
+                    <Image src={preview} alt={`Preview ${index + 1}`} fill className="object-cover rounded-lg" />
+
+                    {/* 썸네일 표시 */}
+                    {index === 0 && (
+                      <div className="absolute top-1 left-1 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
+                        대표
+                      </div>
+                    )}
+
+                    {/* 순서 변경 버튼 */}
+                    <div className="absolute bottom-1 left-1 flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                      <button
+                        type="button"
+                        onClick={() => moveImageUp(index)}
+                        disabled={loading || index === 0}
+                        className={`bg-gray-800 text-white rounded p-1 ${
+                          index === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-gray-700'
+                        }`}
+                        title="앞으로 이동"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveImageDown(index)}
+                        disabled={loading || index === imagePreviews.length - 1}
+                        className={`bg-gray-800 text-white rounded p-1 ${
+                          index === imagePreviews.length - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-gray-700'
+                        }`}
+                        title="뒤로 이동"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* 삭제 버튼 */}
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition hover:bg-red-600"
+                      disabled={loading}
+                      title="삭제"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+
+                    {/* 순서 번호 */}
+                    <div className="absolute bottom-1 right-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
+                      {index + 1}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

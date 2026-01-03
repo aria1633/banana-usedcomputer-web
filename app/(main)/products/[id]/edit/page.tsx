@@ -139,6 +139,42 @@ export default function EditProductPage() {
     setNewImagePreviews(newPreviewsFiltered);
   };
 
+  // 기존 이미지 순서 변경
+  const moveExistingImageUp = (index: number) => {
+    if (index === 0) return;
+    const newUrls = [...existingImageUrls];
+    [newUrls[index - 1], newUrls[index]] = [newUrls[index], newUrls[index - 1]];
+    setExistingImageUrls(newUrls);
+  };
+
+  const moveExistingImageDown = (index: number) => {
+    if (index === existingImageUrls.length - 1) return;
+    const newUrls = [...existingImageUrls];
+    [newUrls[index], newUrls[index + 1]] = [newUrls[index + 1], newUrls[index]];
+    setExistingImageUrls(newUrls);
+  };
+
+  // 새 이미지 순서 변경
+  const moveNewImageUp = (index: number) => {
+    if (index === 0) return;
+    const newImagesArr = [...newImages];
+    const newPreviewsArr = [...newImagePreviews];
+    [newImagesArr[index - 1], newImagesArr[index]] = [newImagesArr[index], newImagesArr[index - 1]];
+    [newPreviewsArr[index - 1], newPreviewsArr[index]] = [newPreviewsArr[index], newPreviewsArr[index - 1]];
+    setNewImages(newImagesArr);
+    setNewImagePreviews(newPreviewsArr);
+  };
+
+  const moveNewImageDown = (index: number) => {
+    if (index === newImages.length - 1) return;
+    const newImagesArr = [...newImages];
+    const newPreviewsArr = [...newImagePreviews];
+    [newImagesArr[index], newImagesArr[index + 1]] = [newImagesArr[index + 1], newImagesArr[index]];
+    [newPreviewsArr[index], newPreviewsArr[index + 1]] = [newPreviewsArr[index + 1], newPreviewsArr[index]];
+    setNewImages(newImagesArr);
+    setNewImagePreviews(newPreviewsArr);
+  };
+
   // 폼 제출
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -482,7 +518,9 @@ export default function EditProductPage() {
           {/* 기존 이미지 */}
           {existingImageUrls.length > 0 && (
             <div className="mb-4">
-              <p className="text-sm text-gray-600 mb-2">기존 이미지</p>
+              <p className="text-sm text-gray-600 mb-2">
+                기존 이미지 (첫 번째 이미지가 대표 이미지입니다. 화살표로 순서 변경 가능)
+              </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                 {existingImageUrls.map((url, index) => (
                   <div key={index} className="relative group aspect-square">
@@ -493,21 +531,61 @@ export default function EditProductPage() {
                       className="object-cover rounded-lg"
                       unoptimized
                     />
+
+                    {/* 썸네일 표시 */}
+                    {index === 0 && (
+                      <div className="absolute top-1 left-1 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
+                        대표
+                      </div>
+                    )}
+
+                    {/* 순서 변경 버튼 */}
+                    <div className="absolute bottom-1 left-1 flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                      <button
+                        type="button"
+                        onClick={() => moveExistingImageUp(index)}
+                        disabled={loading || index === 0}
+                        className={`bg-gray-800 text-white rounded p-1 ${
+                          index === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-gray-700'
+                        }`}
+                        title="앞으로 이동"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveExistingImageDown(index)}
+                        disabled={loading || index === existingImageUrls.length - 1}
+                        className={`bg-gray-800 text-white rounded p-1 ${
+                          index === existingImageUrls.length - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-gray-700'
+                        }`}
+                        title="뒤로 이동"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* 삭제 버튼 */}
                     <button
                       type="button"
                       onClick={() => removeExistingImage(index)}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition hover:bg-red-600"
                       disabled={loading}
+                      title="삭제"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
+
+                    {/* 순서 번호 */}
+                    <div className="absolute bottom-1 right-1 bg-black/60 text-white text-xs px-2 py-0.5 rounded">
+                      {index + 1}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -555,7 +633,9 @@ export default function EditProductPage() {
           {/* 새 이미지 미리보기 */}
           {newImagePreviews.length > 0 && (
             <div className="mt-4">
-              <p className="text-sm text-gray-600 mb-2">새로 추가할 이미지</p>
+              <p className="text-sm text-gray-600 mb-2">
+                새로 추가할 이미지 (기존 이미지 뒤에 추가됩니다. 화살표로 순서 변경 가능)
+              </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                 {newImagePreviews.map((preview, index) => (
                   <div key={index} className="relative group aspect-square">
@@ -565,21 +645,54 @@ export default function EditProductPage() {
                       fill
                       className="object-cover rounded-lg"
                     />
+
+                    {/* 순서 변경 버튼 */}
+                    <div className="absolute bottom-1 left-1 flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                      <button
+                        type="button"
+                        onClick={() => moveNewImageUp(index)}
+                        disabled={loading || index === 0}
+                        className={`bg-gray-800 text-white rounded p-1 ${
+                          index === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-gray-700'
+                        }`}
+                        title="앞으로 이동"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => moveNewImageDown(index)}
+                        disabled={loading || index === newImagePreviews.length - 1}
+                        className={`bg-gray-800 text-white rounded p-1 ${
+                          index === newImagePreviews.length - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-gray-700'
+                        }`}
+                        title="뒤로 이동"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {/* 삭제 버튼 */}
                     <button
                       type="button"
                       onClick={() => removeNewImage(index)}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition hover:bg-red-600"
                       disabled={loading}
+                      title="삭제"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
+
+                    {/* 순서 번호 */}
+                    <div className="absolute bottom-1 right-1 bg-green-600 text-white text-xs px-2 py-0.5 rounded">
+                      +{index + 1}
+                    </div>
                   </div>
                 ))}
               </div>
