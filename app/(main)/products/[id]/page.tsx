@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProductService } from '@/lib/services/product.service';
+import { UserService } from '@/lib/services/user.service';
 import { Product } from '@/types/product';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,6 +22,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [sellerName, setSellerName] = useState<string>('');
 
   // 본인의 상품인지 확인
   const isOwner = user && product && user.uid === product.sellerId;
@@ -33,6 +35,18 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           setError('상품을 찾을 수 없습니다.');
         } else {
           setProduct(data);
+
+          // 판매자 정보를 실시간으로 가져오기
+          try {
+            const seller = await UserService.getUserByUid(data.sellerId);
+            if (seller) {
+              setSellerName(seller.name);
+            }
+          } catch (err) {
+            console.error('판매자 정보 조회 실패:', err);
+            // 실패시 Product의 sellerName 사용
+            setSellerName(data.sellerName);
+          }
         }
       } catch (err: unknown) {
         console.error('상품 조회 실패:', err);
@@ -186,7 +200,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-500 mb-1">판매자</p>
-                  <p className="font-semibold text-gray-900">{product.sellerName}</p>
+                  <p className="font-semibold text-gray-900">{sellerName || product.sellerName}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 mb-1">재고 수량</p>

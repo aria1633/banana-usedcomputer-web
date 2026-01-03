@@ -38,7 +38,7 @@ export class BannerService {
       logger.info('Active banners fetched successfully', { count: banners.length });
       return banners;
     } catch (error) {
-      logger.error('Failed to fetch active banners', error);
+      logger.error('Failed to fetch active banners', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -76,7 +76,7 @@ export class BannerService {
       logger.info('All banners fetched successfully', { count: banners.length });
       return banners;
     } catch (error) {
-      logger.error('Failed to fetch all banners', error);
+      logger.error('Failed to fetch all banners', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -123,7 +123,7 @@ export class BannerService {
       logger.info('Banner created successfully', { id: banner.id });
       return banner;
     } catch (error) {
-      logger.error('Failed to create banner', error);
+      logger.error('Failed to create banner', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -172,7 +172,7 @@ export class BannerService {
       logger.info('Banner updated successfully', { id: banner.id });
       return banner;
     } catch (error) {
-      logger.error('Failed to update banner', error);
+      logger.error('Failed to update banner', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -196,7 +196,7 @@ export class BannerService {
 
       logger.info('Banner deleted successfully', { id });
     } catch (error) {
-      logger.error('Failed to delete banner', error);
+      logger.error('Failed to delete banner', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }
@@ -220,7 +220,7 @@ export class BannerService {
 
       logger.info('Banner active status toggled successfully', { id, isActive });
     } catch (error) {
-      logger.error('Failed to toggle banner active status', error);
+      logger.error('Failed to toggle banner active status', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }

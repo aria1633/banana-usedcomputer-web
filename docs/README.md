@@ -1,193 +1,189 @@
-# 📚 프로젝트 문서 디렉토리
+# 바나나 중고컴퓨터 - 개발 문서 인덱스
 
-바나나 중고컴퓨터 프로젝트의 모든 개발 문서를 정리한 디렉토리입니다.
-
----
-
-## 📁 폴더 구조
-
-```
-docs/
-├── README.md                    # 이 파일
-├── dev-logs/                    # 개발 일지
-├── guides/                      # 개발 가이드
-├── architecture/                # 아키텍처 문서
-├── deployment/                  # 배포 관련 문서
-├── security/                    # 보안 및 RLS 관련
-└── troubleshooting/             # 문제 해결 가이드
-```
+프로젝트의 모든 개발 문서를 정리한 디렉토리입니다.
 
 ---
 
-## 📖 문서 카테고리
+## 문서 트리 구조
 
-### 🗓️ dev-logs/ - 개발 일지
-프로젝트 개발 과정에서의 주요 작업과 문제 해결 과정을 기록합니다.
-
-**주요 문서:**
-- `2025-11-02_개발일지.md` - 초기 개발 진행 상황
-- `2025-11-06_vercel-deployment-fix.md` - Vercel 배포 문제 해결
-
-### 📘 guides/ - 개발 가이드
-프로젝트 개발 시 필수적으로 참고해야 하는 가이드 문서들입니다.
-
-**⭐ 필독 문서:**
-- `프로젝트_개발_가이드.md` - **가장 중요! 새 세션 시작 시 필수**
-- `SUPABASE_SDK_CONVERSION_GUIDE.txt` - Supabase Fetch API 사용 가이드
-- `SETUP_GUIDE.md` - 프로젝트 초기 설정
-- `SETUP_GUIDE_EMAIL_CONFIRM.md` - 이메일 인증 설정
-
-**AI 세션 시작 시 필수:**
 ```
-1순위: 프로젝트_개발_가이드.md
-2순위: SUPABASE_SDK_CONVERSION_GUIDE.txt
-3순위: 에러_무한루프_해결_가이드.txt (troubleshooting/)
+banana_usedcomputer_web/
+│
+├── docs/                                    # 개발 문서
+│   ├── README.md                            # 문서 인덱스 (현재 파일)
+│   │
+│   ├── guides/                              # 가이드 문서
+│   │   ├── SETUP_GUIDE.md                   # 프로젝트 초기 설정 가이드
+│   │   ├── SETUP_GUIDE_EMAIL_CONFIRM.md     # 이메일 인증 설정 가이드
+│   │   ├── SUPABASE_SDK_CONVERSION_GUIDE.txt # Firebase→Supabase 전환 가이드
+│   │   └── 프로젝트_개발_가이드.md            # 전체 개발 가이드 ⭐
+│   │
+│   ├── security/                            # 보안 관련 문서
+│   │   ├── RLS_QUICK_REFERENCE.md           # RLS 빠른 참조 ⭐
+│   │   ├── RLS_ANALYSIS_REPORT.md           # RLS 분석 리포트
+│   │   ├── RLS_FIXES_GUIDE.md               # RLS 수정 가이드
+│   │   ├── RLS_AUDIT_INDEX.md               # RLS 감사 인덱스
+│   │   ├── RLS_수정_작업_가이드.md            # RLS 수정 작업 상세
+│   │   ├── RLS_수정_완료_보고서.md            # RLS 수정 완료 보고
+│   │   ├── RLS_FIX_POTENTIAL_ERRORS_ANALYSIS.md # 잠재적 오류 분석
+│   │   ├── Phase2_안전성_평가.md              # 2단계 안전성 평가
+│   │   ├── 수정_안전성_확인서.md              # 안전성 확인서
+│   │   └── 간단_요약.md                      # 보안 작업 요약
+│   │
+│   ├── deployment/                          # 배포 관련 문서
+│   │   └── VERCEL_ENV_VARIABLES.md          # Vercel 환경변수 설정
+│   │
+│   ├── troubleshooting/                     # 문제해결 문서
+│   │   ├── QUICK_FIX_README.md              # 빠른 수정 가이드
+│   │   ├── REJECTION_FEEDBACK_COMPLETE.md   # 거절 피드백 기능 완료
+│   │   ├── 에러_무한루프_해결_가이드.txt       # 무한루프 에러 해결 ⭐
+│   │   └── 핵심개선_완료_리포트.txt           # 핵심 개선 완료 보고
+│   │
+│   └── dev-logs/                            # 개발 일지
+│       ├── 개발일지_2025-11-02.md            # 초기 개발
+│       ├── 2025-11-06_vercel-deployment-fix.md # Vercel 배포 수정
+│       ├── 2025-11-09_inquiry-contact-features.md # 문의/연락 기능
+│       ├── 2025-11-18_banner-password-product-features.md # 배너/비밀번호/상품
+│       └── 2026-01-02_channel-separation-feature.md # 채널 분리 기능 ⭐ NEW
+│
+├── 프로젝트_문서화_패키지/                    # 프로젝트 문서화 패키지
+│   ├── 01_데이터모델_TypeScript_인터페이스.md # 데이터 모델 정의
+│   └── 02_화면별_상세_기능_명세서.md          # 화면별 기능 명세
+│
+└── *.sql                                    # SQL 마이그레이션 파일 (루트)
+    ├── supabase-setup.sql                   # 초기 테이블 설정
+    ├── supabase-fix-trigger.sql             # 트리거 수정
+    ├── supabase-quick-fix.sql               # 빠른 수정
+    ├── supabase-add-rejection-reason.sql    # 거절 사유 추가
+    ├── supabase-add-rejection-reason-to-users.sql # users 테이블 거절 사유
+    ├── supabase-add-transactions-table.sql  # 거래 테이블 추가
+    ├── supabase-check-and-clean-transactions.sql # 거래 데이터 정리
+    ├── supabase-recreate-transactions-table.sql # 거래 테이블 재생성
+    ├── supabase-add-category-to-sell-requests.sql # 판매요청 카테고리
+    └── supabase-create-banners-table.sql    # 배너 테이블 생성
 ```
-
-### 🏗️ architecture/ - 아키텍처 문서
-시스템 설계 및 아키텍처 관련 문서입니다.
-
-**향후 추가 예정:**
-- 데이터베이스 스키마
-- API 설계
-- 컴포넌트 구조
-
-### 🚀 deployment/ - 배포 관련 문서
-배포 프로세스 및 환경 설정 문서입니다.
-
-**주요 문서:**
-- `VERCEL_ENV_VARIABLES.md` - Vercel 환경 변수 설정 가이드
-
-### 🔒 security/ - 보안 및 RLS 문서
-Row Level Security(RLS) 정책 및 보안 관련 문서입니다.
-
-**주요 문서:**
-- `RLS_수정_완료_보고서.md` - RLS 수정 완료 보고
-- `RLS_QUICK_REFERENCE.md` - RLS 빠른 참조
-- `RLS_ANALYSIS_REPORT.md` - RLS 분석 보고서
-- `RLS_FIXES_GUIDE.md` - RLS 수정 가이드
-- `Phase2_안전성_평가.md` - 안전성 평가 문서
-
-### 🛠️ troubleshooting/ - 문제 해결 가이드
-프로젝트 개발 중 발생하는 문제들의 해결 방법을 정리합니다.
-
-**주요 문서:**
-- `에러_무한루프_해결_가이드.txt` - **에러 발생 시 필독**
-- `핵심개선_완료_리포트.txt` - 핵심 개선 사항
-- `QUICK_FIX_README.md` - 빠른 수정 가이드
-- `REJECTION_FEEDBACK_COMPLETE.md` - 피드백 처리 완료
 
 ---
 
-## 🎯 상황별 읽어야 할 문서
+## 새 세션 시작 시 필수 문서
 
-### 새로운 AI 세션을 시작할 때
-1. **필수**: `guides/프로젝트_개발_가이드.md` ⭐⭐⭐
-2. **권장**: `guides/SUPABASE_SDK_CONVERSION_GUIDE.txt`
-3. **참고**: `README.md` (프로젝트 루트)
+```
+1순위: guides/프로젝트_개발_가이드.md          ⭐⭐⭐
+2순위: guides/SUPABASE_SDK_CONVERSION_GUIDE.txt
+3순위: troubleshooting/에러_무한루프_해결_가이드.txt
+```
 
-### 에러가 발생했을 때
-1. **1순위**: `troubleshooting/에러_무한루프_해결_가이드.txt`
-2. **2순위**: 브라우저 콘솔 확인
-3. **3순위**: `troubleshooting/QUICK_FIX_README.md`
+---
 
-### 배포 문제가 있을 때
-1. `deployment/VERCEL_ENV_VARIABLES.md`
-2. `dev-logs/2025-11-06_vercel-deployment-fix.md`
-3. Vercel 설정 확인
+## 문서 카테고리별 안내
 
-### RLS 정책을 수정할 때
+### 1. 가이드 (guides/)
+프로젝트 설정 및 개발에 필요한 가이드 문서
+
+| 문서 | 설명 |
+|------|------|
+| [SETUP_GUIDE.md](guides/SETUP_GUIDE.md) | 프로젝트 초기 설정 방법 |
+| [SETUP_GUIDE_EMAIL_CONFIRM.md](guides/SETUP_GUIDE_EMAIL_CONFIRM.md) | 이메일 인증 설정 |
+| [SUPABASE_SDK_CONVERSION_GUIDE.txt](guides/SUPABASE_SDK_CONVERSION_GUIDE.txt) | Supabase Fetch API 가이드 |
+| [프로젝트_개발_가이드.md](guides/프로젝트_개발_가이드.md) | **필독** 전체 개발 가이드라인 |
+
+### 2. 보안 (security/)
+Row Level Security(RLS) 및 보안 관련 문서
+
+| 문서 | 설명 |
+|------|------|
+| [RLS_QUICK_REFERENCE.md](security/RLS_QUICK_REFERENCE.md) | RLS 빠른 참조 가이드 |
+| [RLS_ANALYSIS_REPORT.md](security/RLS_ANALYSIS_REPORT.md) | RLS 정책 분석 리포트 |
+| [RLS_FIXES_GUIDE.md](security/RLS_FIXES_GUIDE.md) | RLS 수정 가이드 |
+| [간단_요약.md](security/간단_요약.md) | 보안 작업 요약 |
+
+### 3. 배포 (deployment/)
+Vercel 배포 관련 설정 문서
+
+| 문서 | 설명 |
+|------|------|
+| [VERCEL_ENV_VARIABLES.md](deployment/VERCEL_ENV_VARIABLES.md) | Vercel 환경변수 설정 |
+
+### 4. 문제해결 (troubleshooting/)
+발생한 이슈와 해결 방법 문서
+
+| 문서 | 설명 |
+|------|------|
+| [QUICK_FIX_README.md](troubleshooting/QUICK_FIX_README.md) | 빠른 수정 가이드 |
+| [에러_무한루프_해결_가이드.txt](troubleshooting/에러_무한루프_해결_가이드.txt) | **필독** 에러 발생 시 |
+| [REJECTION_FEEDBACK_COMPLETE.md](troubleshooting/REJECTION_FEEDBACK_COMPLETE.md) | 거절 피드백 기능 |
+
+### 5. 개발 일지 (dev-logs/)
+날짜별 개발 작업 기록
+
+| 날짜 | 문서 | 주요 작업 |
+|------|------|----------|
+| 2025-11-02 | [개발일지_2025-11-02.md](dev-logs/개발일지_2025-11-02.md) | 초기 개발 |
+| 2025-11-06 | [2025-11-06_vercel-deployment-fix.md](dev-logs/2025-11-06_vercel-deployment-fix.md) | Vercel 배포 수정 |
+| 2025-11-09 | [2025-11-09_inquiry-contact-features.md](dev-logs/2025-11-09_inquiry-contact-features.md) | 문의/연락 기능 |
+| 2025-11-18 | [2025-11-18_banner-password-product-features.md](dev-logs/2025-11-18_banner-password-product-features.md) | 배너/비밀번호/상품 |
+| **2026-01-02** | [2026-01-02_channel-separation-feature.md](dev-logs/2026-01-02_channel-separation-feature.md) | **채널 분리 기능** |
+
+---
+
+## 주요 기능 문서
+
+### 채널 분리 시스템 (2026-01-02 구현)
+
+| 채널 | 등록 경로 | 노출 위치 |
+|------|----------|----------|
+| `wholesale` | `/business/products/new` | 도매 마켓 (`/business/market`) |
+| `retail` | `/consumer/products/new` | 일반 사용자 마켓 (`/consumer/products`) |
+
+**핵심 페이지:**
+- `/business` - 도매상 대시보드 (4개 퀵액션 카드)
+- `/business/market` - 모든 도매상 상품 보기
+- `/business/products` - 내 도매 상품 관리
+- `/consumer/products` - 일반 사용자 소매 상품
+
+자세한 내용: [2026-01-02_channel-separation-feature.md](dev-logs/2026-01-02_channel-separation-feature.md)
+
+---
+
+## SQL 마이그레이션 파일
+
+프로젝트 루트의 SQL 파일들은 Supabase 데이터베이스 스키마 변경 이력입니다.
+
+| 파일 | 설명 |
+|------|------|
+| `supabase-setup.sql` | 초기 테이블 구조 설정 |
+| `supabase-create-banners-table.sql` | 배너 테이블 생성 |
+| `supabase-add-transactions-table.sql` | 거래 테이블 추가 |
+| `supabase-add-category-to-sell-requests.sql` | 판매요청에 카테고리 추가 |
+| `supabase-add-rejection-reason-to-users.sql` | 사용자 거절 사유 필드 |
+
+---
+
+## 상황별 문서 가이드
+
+### 에러 발생 시
+1. `troubleshooting/에러_무한루프_해결_가이드.txt`
+2. 브라우저 콘솔 확인
+3. `troubleshooting/QUICK_FIX_README.md`
+
+### RLS 정책 수정 시
 1. `security/RLS_QUICK_REFERENCE.md`
 2. `security/RLS_FIXES_GUIDE.md`
 3. `security/RLS_수정_완료_보고서.md`
 
-### 프로젝트 초기 설정 시
-1. `guides/SETUP_GUIDE.md`
-2. `guides/SETUP_GUIDE_EMAIL_CONFIRM.md`
-3. `deployment/VERCEL_ENV_VARIABLES.md`
+### 배포 문제 시
+1. `deployment/VERCEL_ENV_VARIABLES.md`
+2. `dev-logs/2025-11-06_vercel-deployment-fix.md`
 
 ---
 
-## 📋 문서 작성 규칙
+## 문서 작성 규칙
 
-### 개발일지 작성 기준
-- **파일명**: `YYYY-MM-DD_주제.md`
-- **위치**: `dev-logs/`
-- **작성 시점**: 주요 작업 완료 시, 중요한 문제 해결 시
-
-### 가이드 문서 작성 기준
-- **목적**: 재사용 가능한 지식 정리
-- **위치**: 목적에 맞는 폴더
-- **형식**: Markdown, 명확한 제목과 예제 포함
-
-### 문서 업데이트
-- 중요한 변경사항 발생 시 즉시 업데이트
-- 날짜 표시 및 버전 관리
-- 관련 문서들과의 링크 유지
+1. **개발 일지**: `docs/dev-logs/YYYY-MM-DD_feature-name.md` 형식
+2. **가이드 문서**: `docs/guides/` 디렉토리에 저장
+3. **보안 문서**: `docs/security/` 디렉토리에 저장
+4. **SQL 파일**: 프로젝트 루트에 `supabase-*.sql` 형식으로 저장
 
 ---
 
-## 🔍 문서 검색 팁
-
-### 키워드로 찾기
-```bash
-# 특정 키워드가 포함된 문서 찾기
-grep -r "키워드" docs/
-
-# Markdown 파일만 검색
-grep -r "키워드" docs/ --include="*.md"
-```
-
-### 카테고리별로 찾기
-```bash
-# 가이드 문서 목록
-ls docs/guides/
-
-# 최근 개발일지
-ls -lt docs/dev-logs/
-```
-
----
-
-## 📌 중요 문서 요약
-
-### 🌟 최우선 문서 (항상 참고)
-1. **프로젝트_개발_가이드.md** - 개발 철학과 핵심 규칙
-2. **에러_무한루프_해결_가이드.txt** - 90%의 에러 해결법
-3. **SUPABASE_SDK_CONVERSION_GUIDE.txt** - Fetch API 사용법
-
-### ⚡ 빠른 참조
-- **RLS_QUICK_REFERENCE.md** - RLS 정책 빠른 참조
-- **VERCEL_ENV_VARIABLES.md** - 환경 변수 설정
-
-### 📊 분석 및 보고서
-- **RLS_수정_완료_보고서.md** - RLS 수정 완료 상태
-- **핵심개선_완료_리포트.txt** - 주요 개선 사항
-- **2025-11-06_vercel-deployment-fix.md** - 배포 문제 해결 과정
-
----
-
-## 🔄 문서 유지보수
-
-### 정기 점검 항목
-- [ ] 오래된 문서 아카이빙
-- [ ] 링크 깨짐 확인
-- [ ] 최신 정보 반영
-- [ ] 중복 문서 통합
-
-### 문서 품질 기준
-- ✅ 명확한 제목과 목차
-- ✅ 실용적인 예제 포함
-- ✅ 최신 정보 반영
-- ✅ 다른 문서와의 연계
-
----
-
-## 📞 문의
-
-문서 관련 문의나 개선 제안은 프로젝트 관리자에게 연락하세요.
-
----
-
-**마지막 업데이트**: 2025-11-06
-**관리자**: 프로젝트 팀
+*마지막 업데이트: 2026-01-02*

@@ -57,7 +57,7 @@ export default function WonBidsPage() {
         const offersWithTransactions = await Promise.all(
           offers.map(async (offer) => {
             try {
-              const transaction = await TransactionService.getTransactionByOfferId(offer.id, accessToken);
+              const transaction = await TransactionService.getTransactionByOfferId(offer.id, accessToken ?? undefined);
               return { ...offer, transaction };
             } catch (error) {
               console.error('거래 정보 조회 실패:', offer.id, error);

@@ -36,7 +36,7 @@ export default function ContactSellerModal({
       const sellerData = await UserService.getUserByUid(sellerId);
       setSeller(sellerData);
     } catch (err) {
-      logger.error('판매자 정보 조회 실패', err);
+      logger.error('판매자 정보 조회 실패', { error: err instanceof Error ? err.message : String(err) });
       setError('판매자 정보를 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);

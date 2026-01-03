@@ -57,6 +57,149 @@ export class AdminService {
   }
 
   /**
+   * 사용자 타입별 조회
+   */
+  static async getUsersByType(userType: UserType): Promise<User[]> {
+    try {
+      logger.group('AdminService.getUsersByType');
+      logger.info('Fetching users by type', { userType });
+
+      const data = await get<any[]>(
+        `/rest/v1/${this.COLLECTION}?user_type=eq.${userType}&order=created_at.desc`
+      );
+
+      logger.info('Fetched users by type', { count: data.length, userType });
+      logger.groupEnd();
+
+      return data.map((item: any) => this.mapToUser(item));
+    } catch (error) {
+      logger.groupEnd();
+      logger.error('Failed to get users by type', { error, userType });
+      throw new Error(`사용자 타입별 조회 실패: ${error}`);
+    }
+  }
+
+  /**
+   * 사용자 정보 수정 (관리자용)
+   */
+  static async updateUser(uid: string, updates: {
+    name?: string;
+    phoneNumber?: string;
+    userType?: UserType;
+    verificationStatus?: VerificationStatus;
+  }): Promise<void> {
+    try {
+      logger.group('AdminService.updateUser');
+      logger.info('Updating user (admin)', { uid, updates });
+
+      const updateData: Record<string, any> = {
+        updated_at: new Date().toISOString(),
+      };
+
+      if (updates.name !== undefined) {
+        updateData.name = updates.name.trim();
+      }
+
+      if (updates.phoneNumber !== undefined) {
+        updateData.phone_number = updates.phoneNumber.trim();
+      }
+
+      if (updates.userType !== undefined) {
+        updateData.user_type = updates.userType;
+      }
+
+      if (updates.verificationStatus !== undefined) {
+        updateData.verification_status = updates.verificationStatus;
+      }
+
+      // 1. users 테이블 업데이트
+      await patch(
+        `/rest/v1/${this.COLLECTION}?uid=eq.${uid}`,
+        {
+          requireAuth: true,
+          headers: {
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify(updateData)
+        }
+      );
+
+      logger.info('User updated successfully (admin)', { uid });
+
+      // 2. 이름이 변경된 경우, 해당 사용자의 모든 상품의 seller_name도 업데이트
+      if (updates.name !== undefined) {
+        logger.info('Updating seller_name in products table', { uid, newName: updates.name.trim() });
+
+        try {
+          await patch(
+            `/rest/v1/products?seller_id=eq.${uid}`,
+            {
+              requireAuth: true,
+              headers: {
+                'Prefer': 'resolution=merge-duplicates'
+              },
+              body: JSON.stringify({
+                seller_name: updates.name.trim(),
+                updated_at: new Date().toISOString(),
+              })
+            }
+          );
+          logger.info('Products seller_name updated successfully', { uid });
+        } catch (productUpdateError) {
+          // 상품 업데이트 실패해도 사용자 정보는 업데이트됨
+          logger.error('Failed to update products seller_name (non-critical)', {
+            error: productUpdateError,
+            uid
+          });
+        }
+      }
+
+      logger.groupEnd();
+    } catch (error) {
+      logger.groupEnd();
+      logger.error('Failed to update user (admin)', { error, uid });
+      throw new Error(`사용자 정보 수정 실패: ${error}`);
+    }
+  }
+
+  /**
+   * 사용자 삭제 (관리자용)
+   *
+   * 주의: 실제로는 삭제하지 않고 비활성화하는 것을 권장
+   * 여기서는 실제 삭제를 구현하되, 필요시 soft delete로 변경 가능
+   */
+  static async deleteUser(uid: string): Promise<void> {
+    try {
+      logger.group('AdminService.deleteUser');
+      logger.info('Deleting user (admin)', { uid });
+
+      // Supabase에서 DELETE 요청
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/${this.COLLECTION}?uid=eq.${uid}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      logger.info('User deleted successfully (admin)', { uid });
+      logger.groupEnd();
+    } catch (error) {
+      logger.groupEnd();
+      logger.error('Failed to delete user (admin)', { error, uid });
+      throw new Error(`사용자 삭제 실패: ${error}`);
+    }
+  }
+
+  /**
    * 도매상 승인
    */
   static async approveWholesaler(uid: string): Promise<void> {

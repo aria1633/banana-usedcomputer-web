@@ -7,11 +7,29 @@ import { useAuthStore } from '@/lib/store/auth.store';
 import { UserType, VerificationStatus } from '@/types/user';
 
 export function useAuth() {
-  const { user, isLoading, setUser, setLoading } = useAuthStore();
+  const { user, isLoading, setUser, setLoading, refreshUser } = useAuthStore();
 
   useEffect(() => {
     let mounted = true;
     console.log('[use-auth] useEffect started, initial isLoading:', isLoading);
+
+    // 페이지 포커스 시 사용자 정보 갱신
+    const handleFocus = () => {
+      console.log('[use-auth] Page focused, refreshing user data');
+      refreshUser();
+    };
+
+    // 페이지 가시성 변경 시 사용자 정보 갱신 (탭 전환 등)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('[use-auth] Page became visible, refreshing user data');
+        refreshUser();
+      }
+    };
+
+    // 페이지 포커스 및 가시성 변경 이벤트 리스너 등록
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // 초기 세션 확인
     const checkSession = async () => {
@@ -163,9 +181,11 @@ export function useAuth() {
       console.log('[use-auth] Cleanup - unsubscribing');
       mounted = false;
       subscription.unsubscribe();
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [setUser, setLoading]);
+  }, [setUser, setLoading, refreshUser]);
 
   console.log('[use-auth] Returning:', { hasUser: !!user, isLoading });
-  return { user, isLoading };
+  return { user, isLoading, refreshUser };
 }

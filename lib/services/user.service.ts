@@ -35,7 +35,37 @@ export class UserService {
   }
 
   /**
-   * 사용자 정보 조회
+   * 닉네임 중복 확인
+   */
+  static async checkNameExists(name: string): Promise<boolean> {
+    try {
+      logger.group('UserService.checkNameExists');
+      logger.info('Checking name existence', { name });
+
+      // requireAuth: false로 설정하여 로그인 없이도 체크 가능
+      const data = await get<any[]>(
+        `/rest/v1/${this.COLLECTION}?name=eq.${encodeURIComponent(name)}&select=uid`,
+        { requireAuth: false }
+      );
+
+      const exists = data && data.length > 0;
+      logger.info('Name check result', { name, exists });
+      logger.groupEnd();
+
+      return exists;
+    } catch (error) {
+      logger.groupEnd();
+      logger.error('Failed to check name', { error, name });
+      // 에러 발생 시 false 반환 (회원가입 진행 허용)
+      return false;
+    }
+  }
+
+  /**
+   * 사용자 정보 조회 (공개 API - 인증 불필요)
+   *
+   * 판매자 이름 등 공개 정보를 조회하기 위해 인증 없이 호출 가능
+   * RLS 정책에서 민감하지 않은 정보만 공개하도록 설정되어야 함
    */
   static async getUserByUid(uid: string): Promise<User> {
     try {
@@ -44,7 +74,7 @@ export class UserService {
 
       const data = await get<any[]>(
         `/rest/v1/${this.COLLECTION}?uid=eq.${uid}&select=*`,
-        { requireAuth: true }
+        { requireAuth: false }
       );
 
       if (!data || data.length === 0) {

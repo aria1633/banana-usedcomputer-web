@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { AuthService } from '@/lib/services/auth.service';
 import { useAuthStore } from '@/lib/store/auth.store';
+import { UserType } from '@/types/user';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,7 +25,22 @@ export default function LoginPage() {
     try {
       const user = await AuthService.signIn(email, password);
       setUser(user);
-      router.push('/');
+
+      // 사용자 유형에 따른 리다이렉트
+      // 저장된 선호 홈이 있으면 해당 경로로, 없으면 userType에 따라 결정
+      const preferredHome = localStorage.getItem('preferred_home');
+
+      if (preferredHome) {
+        router.push(preferredHome);
+      } else if (user.userType === UserType.ADMIN) {
+        router.push('/admin/dashboard');
+      } else if (user.userType === UserType.WHOLESALER) {
+        localStorage.setItem('preferred_home', '/business');
+        router.push('/business');
+      } else {
+        localStorage.setItem('preferred_home', '/consumer');
+        router.push('/consumer');
+      }
     } catch (err: unknown) {
       setError((err as Error).message || '로그인에 실패했습니다.');
     } finally {

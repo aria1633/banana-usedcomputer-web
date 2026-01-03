@@ -171,10 +171,23 @@ function table(data: any[]): void {
   }
 }
 
+/**
+ * SUCCESS 로그
+ *
+ * @example
+ * logger.success('Product created successfully', { productId: 'abc123' });
+ */
+function success(message: string, data?: LogData): void {
+  if (isDevelopment) {
+    console.log(formatLog('info', `✅ ${message}`, data));
+  }
+}
+
 export const logger = {
   info,
   warn,
   error,
+  success,
   api,
   storage,
   group,

@@ -199,7 +199,7 @@ export default function WholesalerDashboardPage() {
             </div>
           </div>
           <Link
-            href="/sell-requests"
+            href="/business/sell-requests"
             className="mt-4 block text-sm text-primary hover:underline"
           >
             매입 요청 보기 →
@@ -228,7 +228,7 @@ export default function WholesalerDashboardPage() {
             </Link>
 
             <Link
-              href="/sell-requests"
+              href="/business/sell-requests"
               className="flex items-center p-4 border rounded-lg hover:bg-gray-50 transition"
             >
               <div className="flex-1">

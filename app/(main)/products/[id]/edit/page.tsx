@@ -7,7 +7,7 @@ import { useAuth } from '@/lib/hooks/use-auth';
 import { ProductService } from '@/lib/services/product.service';
 import { StorageService } from '@/lib/services/storage.service';
 import { UserType, VerificationStatus } from '@/types/user';
-import { Product } from '@/types/product';
+import { Product, ProductChannel } from '@/types/product';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { getAccessToken } from '@/lib/utils/auth';
@@ -19,6 +19,11 @@ const CATEGORIES = [
   '키보드/마우스',
   '부품',
   '기타',
+];
+
+const SALE_TYPES: { value: ProductChannel; label: string; description: string }[] = [
+  { value: 'retail', label: '소매 (일반 소비자용)', description: '일반 소비자가 구매할 수 있는 상품입니다.' },
+  { value: 'wholesale', label: '도매 (도매상 전용)', description: '도매상만 볼 수 있는 B2B 상품입니다.' },
 ];
 
 export default function EditProductPage() {
@@ -37,6 +42,7 @@ export default function EditProductPage() {
   const [price, setPrice] = useState('');
   const [quantity, setQuantity] = useState('');
   const [category, setCategory] = useState(CATEGORIES[0]);
+  const [saleType, setSaleType] = useState<ProductChannel>('retail');
   const [existingImageUrls, setExistingImageUrls] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
@@ -66,6 +72,7 @@ export default function EditProductPage() {
         setPrice(productData.price.toLocaleString());
         setQuantity(productData.quantity.toString());
         setCategory(productData.category);
+        setSaleType(productData.channel || 'wholesale');
         setExistingImageUrls(productData.imageUrls);
         setLoadingProduct(false);
       } catch (err) {
@@ -203,8 +210,8 @@ export default function EditProductPage() {
           quantity: quantityNum,
           category,
           imageUrls: finalImageUrls,
-        },
-        accessToken
+          channel: saleType,
+        }
       );
 
       alert('상품이 성공적으로 수정되었습니다!');
@@ -363,6 +370,54 @@ export default function EditProductPage() {
               </option>
             ))}
           </select>
+        </div>
+
+        {/* 판매 유형 */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            판매 유형 <span className="text-red-500">*</span>
+          </label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {SALE_TYPES.map((type) => (
+              <label
+                key={type.value}
+                className={`relative flex cursor-pointer rounded-lg border p-4 focus:outline-none ${
+                  saleType === type.value
+                    ? 'border-primary bg-blue-50 ring-2 ring-primary'
+                    : 'border-gray-300 bg-white hover:bg-gray-50'
+                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                <input
+                  type="radio"
+                  name="saleType"
+                  value={type.value}
+                  checked={saleType === type.value}
+                  onChange={(e) => setSaleType(e.target.value as ProductChannel)}
+                  className="sr-only"
+                  disabled={loading}
+                />
+                <div className="flex flex-1">
+                  <div className="flex flex-col">
+                    <span className={`block text-sm font-medium ${
+                      saleType === type.value ? 'text-primary' : 'text-gray-900'
+                    }`}>
+                      {type.label}
+                    </span>
+                    <span className={`mt-1 text-xs ${
+                      saleType === type.value ? 'text-blue-700' : 'text-gray-500'
+                    }`}>
+                      {type.description}
+                    </span>
+                  </div>
+                </div>
+                {saleType === type.value && (
+                  <svg className="h-5 w-5 text-primary" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                )}
+              </label>
+            ))}
+          </div>
         </div>
 
         {/* 가격과 재고 */}

@@ -1,6 +1,6 @@
 // lib/services/product.service.ts
 
-import { Product } from '@/types/product';
+import { Product, ProductChannel } from '@/types/product';
 import { logger } from '@/lib/utils/logger';
 import { fetchWithAuth, get, post, patch, del, getCount } from '@/lib/utils/fetch';
 import { StorageService } from '@/lib/services/storage.service';
@@ -31,6 +31,7 @@ export class ProductService {
         category: productData.category,
         is_available: productData.isAvailable,
         created_at: productData.createdAt.toISOString(),
+        channel: productData.channel || 'wholesale',
       };
 
       logger.info('Request payload', payload);
@@ -112,12 +113,16 @@ export class ProductService {
 
   /**
    * 실시간 상품 목록 구독 (Polling 방식)
+   * @param callback - 상품 목록을 전달받는 콜백 함수
+   * @param sellerId - 특정 판매자의 상품만 조회 (선택)
+   * @param channel - 특정 채널의 상품만 조회 (선택, 'retail' | 'wholesale')
    */
   static subscribeToProducts(
     callback: (products: Product[]) => void,
-    sellerId?: string
+    sellerId?: string,
+    channel?: ProductChannel
   ): () => void {
-    logger.info('subscribeToProducts started', { sellerId });
+    logger.info('subscribeToProducts started', { sellerId, channel });
 
     // 초기 데이터 로드
     const loadInitialData = async () => {
@@ -127,6 +132,9 @@ export class ProductService {
         let url = `/rest/v1/products?is_available=eq.true&order=created_at.desc`;
         if (sellerId) {
           url += `&seller_id=eq.${sellerId}`;
+        }
+        if (channel) {
+          url += `&channel=eq.${channel}`;
         }
 
         const data = await get<any[]>(url);
@@ -180,6 +188,7 @@ export class ProductService {
       if (updates.category !== undefined) updateData.category = updates.category;
       if (updates.isAvailable !== undefined)
         updateData.is_available = updates.isAvailable;
+      if (updates.channel !== undefined) updateData.channel = updates.channel;
 
       updateData.updated_at = new Date().toISOString();
 
@@ -252,6 +261,26 @@ export class ProductService {
   }
 
   /**
+   * 도매상의 상품 목록 조회
+   */
+  static async getProductsBySeller(sellerId: string): Promise<Product[]> {
+    try {
+      logger.info('Getting products by seller', { sellerId });
+
+      const data = await get<any[]>(
+        `/rest/v1/${this.COLLECTION}?seller_id=eq.${sellerId}&order=created_at.desc`
+      );
+
+      logger.info('Products by seller retrieved', { sellerId, count: data.length });
+
+      return data.map((item: any) => this.mapToProduct(item));
+    } catch (error) {
+      logger.error('getProductsBySeller error', { error, sellerId });
+      throw new Error(`상품 목록 조회 실패: ${error}`);
+    }
+  }
+
+  /**
    * 도매상의 상품 개수 조회
    */
   static async getProductCountBySeller(sellerId: string): Promise<number> {
@@ -298,6 +327,90 @@ export class ProductService {
   }
 
   /**
+   * 채널별 상품 조회
+   * @param channel - 'wholesale' (도매) 또는 'retail' (소매)
+   */
+  static async getProductsByChannel(channel: ProductChannel): Promise<Product[]> {
+    try {
+      logger.info('Getting products by channel', { channel });
+
+      const data = await get<any[]>(
+        `/rest/v1/${this.COLLECTION}?channel=eq.${channel}&is_available=eq.true&order=created_at.desc`
+      );
+
+      logger.info('Products by channel retrieved', { channel, count: data.length });
+
+      return data.map((item: any) => this.mapToProduct(item));
+    } catch (error) {
+      logger.error('getProductsByChannel error', { error, channel });
+      throw new Error(`채널별 상품 조회 실패: ${error}`);
+    }
+  }
+
+  /**
+   * 도매 커뮤니티용 - 모든 도매상 상품 조회 (다른 도매상 상품도 포함)
+   */
+  static async getAllWholesaleProducts(): Promise<Product[]> {
+    try {
+      logger.info('Getting all wholesale products');
+
+      const data = await get<any[]>(
+        `/rest/v1/${this.COLLECTION}?channel=eq.wholesale&is_available=eq.true&order=created_at.desc`
+      );
+
+      logger.info('Wholesale products retrieved', { count: data.length });
+
+      return data.map((item: any) => this.mapToProduct(item));
+    } catch (error) {
+      logger.error('getAllWholesaleProducts error', { error });
+      throw new Error(`도매 상품 조회 실패: ${error}`);
+    }
+  }
+
+  /**
+   * 소매(일반 사용자) 커뮤니티용 - 소매 상품만 조회
+   */
+  static async getAllRetailProducts(): Promise<Product[]> {
+    try {
+      logger.info('Getting all retail products');
+
+      const data = await get<any[]>(
+        `/rest/v1/${this.COLLECTION}?channel=eq.retail&is_available=eq.true&order=created_at.desc`
+      );
+
+      logger.info('Retail products retrieved', { count: data.length });
+
+      return data.map((item: any) => this.mapToProduct(item));
+    } catch (error) {
+      logger.error('getAllRetailProducts error', { error });
+      throw new Error(`소매 상품 조회 실패: ${error}`);
+    }
+  }
+
+  /**
+   * 도매상의 채널별 상품 목록 조회
+   */
+  static async getProductsBySellerAndChannel(
+    sellerId: string,
+    channel: ProductChannel
+  ): Promise<Product[]> {
+    try {
+      logger.info('Getting products by seller and channel', { sellerId, channel });
+
+      const data = await get<any[]>(
+        `/rest/v1/${this.COLLECTION}?seller_id=eq.${sellerId}&channel=eq.${channel}&order=created_at.desc`
+      );
+
+      logger.info('Products retrieved', { sellerId, channel, count: data.length });
+
+      return data.map((item: any) => this.mapToProduct(item));
+    } catch (error) {
+      logger.error('getProductsBySellerAndChannel error', { error, sellerId, channel });
+      throw new Error(`상품 목록 조회 실패: ${error}`);
+    }
+  }
+
+  /**
    * DB 데이터를 Product 타입으로 변환
    */
   private static mapToProduct(data: Record<string, unknown>): Product {
@@ -314,6 +427,7 @@ export class ProductService {
       isAvailable: data.is_available as boolean,
       createdAt: new Date(data.created_at as string),
       updatedAt: data.updated_at ? new Date(data.updated_at as string) : null,
+      channel: (data.channel as 'wholesale' | 'retail') || 'wholesale',
     };
   }
 }

@@ -30,18 +30,19 @@ export default function ProductsPage() {
     }
   }, [searchParam]);
 
-  // 상품 로드 (검색어가 있으면 검색, 없으면 전체 조회)
+  // 상품 로드 (검색어가 있으면 검색, 없으면 소매 상품 조회)
   useEffect(() => {
     const loadProducts = async () => {
       setLoading(true);
       try {
         let data: Product[];
         if (searchParam) {
-          // URL의 검색 파라미터로 검색
-          data = await ProductService.searchProducts(searchParam);
+          // URL의 검색 파라미터로 검색 (소매 상품만 필터링)
+          const allResults = await ProductService.searchProducts(searchParam);
+          data = allResults.filter(p => p.channel === 'retail');
         } else {
-          // 전체 상품 조회
-          data = await ProductService.getAllProducts();
+          // 소매 상품만 조회 (도매 상품은 도매 마켓에서만 표시)
+          data = await ProductService.getAllRetailProducts();
         }
         setProducts(data);
       } catch (error) {

@@ -27,6 +27,45 @@ export default function SignupPage() {
   const [emailCheckLoading, setEmailCheckLoading] = useState(false);
   const [emailExists, setEmailExists] = useState(false);
   const emailCheckTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [nameCheckLoading, setNameCheckLoading] = useState(false);
+  const [nameExists, setNameExists] = useState(false);
+  const nameCheckTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 닉네임 중복 체크 (debounce 적용)
+  useEffect(() => {
+    // 이전 타이머 취소
+    if (nameCheckTimeoutRef.current) {
+      clearTimeout(nameCheckTimeoutRef.current);
+    }
+
+    // 닉네임이 비어있거나 2자 미만이면 체크하지 않음
+    if (!formData.name || formData.name.trim().length < 2) {
+      setNameExists(false);
+      setNameCheckLoading(false);
+      return;
+    }
+
+    // 500ms 지연 후 중복 체크
+    setNameCheckLoading(true);
+    nameCheckTimeoutRef.current = setTimeout(async () => {
+      try {
+        const exists = await UserService.checkNameExists(formData.name.trim());
+        setNameExists(exists);
+      } catch (error) {
+        console.error('Name check error:', error);
+        setNameExists(false);
+      } finally {
+        setNameCheckLoading(false);
+      }
+    }, 500);
+
+    // cleanup
+    return () => {
+      if (nameCheckTimeoutRef.current) {
+        clearTimeout(nameCheckTimeoutRef.current);
+      }
+    };
+  }, [formData.name]);
 
   // 이메일 중복 체크 (debounce 적용)
   useEffect(() => {
@@ -77,9 +116,21 @@ export default function SignupPage() {
     setError('');
     setSuccessMessage('');
 
+    // 닉네임 중복 체크 (최종 확인)
+    if (nameExists) {
+      setError('이미 사용 중인 닉네임입니다.');
+      return;
+    }
+
     // 이메일 중복 체크 (최종 확인)
     if (emailExists) {
       setError('이미 사용 중인 이메일입니다.');
+      return;
+    }
+
+    // 전화번호 필수 확인
+    if (!formData.phoneNumber || formData.phoneNumber.trim() === '') {
+      setError('전화번호를 입력해주세요.');
       return;
     }
 
@@ -127,10 +178,12 @@ export default function SignupPage() {
       logger.info('Signup successful');
       logger.groupEnd();
 
-      // 도매상 가입 시 안내 메시지 추가
+      // 선택한 사용자 유형에 따라 선호 홈 저장
       if (formData.userType === UserType.WHOLESALER) {
+        localStorage.setItem('preferred_home', '/business');
         setSuccessMessage('회원가입이 완료되었습니다!\n관리자 승인 후 도매상 기능을 사용할 수 있습니다.');
       } else {
+        localStorage.setItem('preferred_home', '/consumer');
         setSuccessMessage('회원가입이 완료되었습니다. 로그인해주세요.');
       }
       setTimeout(() => router.push('/login'), 2000);
@@ -143,6 +196,12 @@ export default function SignupPage() {
       // 이메일 확인이 필요한 경우
       if (error.code === 'EMAIL_CONFIRMATION_REQUIRED') {
         logger.info('Email confirmation required');
+        // 선택한 사용자 유형에 따라 선호 홈 저장
+        if (formData.userType === UserType.WHOLESALER) {
+          localStorage.setItem('preferred_home', '/business');
+        } else {
+          localStorage.setItem('preferred_home', '/consumer');
+        }
         setSuccessMessage(
           `회원가입이 완료되었습니다!\n${error.email}로 발송된 이메일 확인 링크를 클릭하여 가입을 완료해주세요.\n\n이메일 확인 후 로그인할 수 있습니다.`
         );
@@ -198,18 +257,59 @@ export default function SignupPage() {
           <div className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                이름
+                {formData.userType === UserType.WHOLESALER ? '업체명' : '닉네임'}
               </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                placeholder="홍길동"
-                value={formData.name}
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-primary sm:text-sm ${
+                    nameExists
+                      ? 'border-red-500 focus:border-red-500'
+                      : formData.name && formData.name.trim().length >= 2 && !nameCheckLoading && !nameExists
+                      ? 'border-green-500 focus:border-green-500'
+                      : 'border-gray-300 focus:border-primary'
+                  } placeholder-gray-500 text-gray-900`}
+                  placeholder={formData.userType === UserType.WHOLESALER ? '업체명을 입력하세요' : '사용할 닉네임을 입력하세요'}
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+                {/* 로딩 스피너 */}
+                {nameCheckLoading && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 mt-0.5">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                  </div>
+                )}
+                {/* 체크 아이콘 */}
+                {!nameCheckLoading && formData.name && formData.name.trim().length >= 2 && !nameExists && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 mt-0.5">
+                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+                {/* X 아이콘 */}
+                {!nameCheckLoading && nameExists && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 mt-0.5">
+                    <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              {/* 중복 메시지 */}
+              {nameExists && (
+                <p className="mt-1 text-sm text-red-600">
+                  이미 사용 중인 {formData.userType === UserType.WHOLESALER ? '업체명' : '닉네임'}입니다.
+                </p>
+              )}
+              {!nameCheckLoading && formData.name && formData.name.trim().length >= 2 && !nameExists && (
+                <p className="mt-1 text-sm text-green-600">
+                  사용 가능한 {formData.userType === UserType.WHOLESALER ? '업체명' : '닉네임'}입니다.
+                </p>
+              )}
             </div>
 
             <div>
@@ -272,20 +372,21 @@ export default function SignupPage() {
 
             <div>
               <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
-                전화번호
+                전화번호 <span className="text-red-500">*</span>
               </label>
               <input
                 id="phoneNumber"
                 name="phoneNumber"
                 type="tel"
                 autoComplete="tel"
+                required
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="010-1234-5678"
                 value={formData.phoneNumber}
                 onChange={handleChange}
               />
               <p className="mt-1 text-xs text-gray-500">
-                거래 시 연락을 위한 전화번호 (선택 사항)
+                거래 시 연락을 위한 전화번호
               </p>
             </div>
 
@@ -342,7 +443,20 @@ export default function SignupPage() {
               </p>
             </div>
 
-            {/* 도매상 선택 시 사업자 등록증 업로드 필드 표시 */}
+            {/* 도매상 선택 시 안내 및 사업자 등록증 업로드 필드 표시 */}
+            {formData.userType === UserType.WHOLESALER && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-start gap-2">
+                  <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="text-sm text-blue-800">
+                    도매상 회원은 <strong>닉네임 대신 업체명</strong>을 입력해주세요. 업체명은 거래 시 표시됩니다.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {formData.userType === UserType.WHOLESALER && (
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
                 <label htmlFor="businessRegistration" className="block text-sm font-medium text-gray-700">
@@ -380,10 +494,10 @@ export default function SignupPage() {
           <div>
             <button
               type="submit"
-              disabled={loading || emailCheckLoading || emailExists}
+              disabled={loading || emailCheckLoading || emailExists || nameCheckLoading || nameExists}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? '가입 중...' : emailCheckLoading ? '이메일 확인 중...' : '회원가입'}
+              {loading ? '가입 중...' : nameCheckLoading ? '닉네임 확인 중...' : emailCheckLoading ? '이메일 확인 중...' : '회원가입'}
             </button>
           </div>
 

@@ -51,7 +51,7 @@ export class InquiryService {
 
       return data[0].id;
     } catch (error) {
-      logger.error('Create inquiry error', error);
+      logger.error('Create inquiry error', { error: error instanceof Error ? error.message : String(error) });
       logger.groupEnd();
       throw error;
     }
@@ -89,7 +89,7 @@ export class InquiryService {
 
       return inquiries;
     } catch (error) {
-      logger.error('Get inquiries error', error);
+      logger.error('Get inquiries error', { error: error instanceof Error ? error.message : String(error) });
       logger.groupEnd();
       throw error;
     }
@@ -127,7 +127,7 @@ export class InquiryService {
 
       return inquiries;
     } catch (error) {
-      logger.error('Get seller inquiries error', error);
+      logger.error('Get seller inquiries error', { error: error instanceof Error ? error.message : String(error) });
       logger.groupEnd();
       throw error;
     }
@@ -165,7 +165,7 @@ export class InquiryService {
 
       return inquiries;
     } catch (error) {
-      logger.error('Get customer inquiries error', error);
+      logger.error('Get customer inquiries error', { error: error instanceof Error ? error.message : String(error) });
       logger.groupEnd();
       throw error;
     }
@@ -211,7 +211,7 @@ export class InquiryService {
       logger.success('Answer submitted');
       logger.groupEnd();
     } catch (error) {
-      logger.error('Answer inquiry error', error);
+      logger.error('Answer inquiry error', { error: error instanceof Error ? error.message : String(error) });
       logger.groupEnd();
       throw error;
     }

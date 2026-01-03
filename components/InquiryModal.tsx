@@ -64,7 +64,7 @@ export default function InquiryModal({
       // 성공 알림
       alert('문의가 성공적으로 등록되었습니다.');
     } catch (err) {
-      logger.error('문의 등록 실패', err);
+      logger.error('문의 등록 실패', { error: err instanceof Error ? err.message : String(err) });
       setError('문의 등록에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsSubmitting(false);

@@ -227,16 +227,35 @@ export interface Product {
 
   /**
    * 마지막 수정 일시 (선택 사항)
-   * 
+   *
    * - 상품 정보가 마지막으로 업데이트된 시각
    * - 가격, 재고, 설명 등 상품 정보 변경 시 갱신
    * - Firestore Timestamp로 저장되며, 클라이언트에서 Date 객체로 변환
    * - 처음 등록 시에는 null
    * - 상품 수정 이력 추적에 사용
    * - "정보 업데이트: X일 전" 같은 UI 표시에 활용
-   * 
+   *
    * @type {Date | null | undefined}
    * @optional
    */
   updatedAt?: Date | null;
+
+  /**
+   * 판매 채널 구분
+   *
+   * - 'wholesale': 도매 커뮤니티 전용 (도매상끼리만 볼 수 있음)
+   * - 'retail': 소매 커뮤니티 전용 (일반 사용자가 볼 수 있음)
+   * - 도매상이 어디에서 상품을 등록했느냐에 따라 결정됨
+   * - /business/products/new 에서 등록 → 'wholesale'
+   * - /consumer/products/new 에서 등록 → 'retail'
+   *
+   * @type {'wholesale' | 'retail'}
+   * @optional - 기존 데이터 호환성을 위해 optional (기본값: 'wholesale')
+   */
+  channel?: 'wholesale' | 'retail';
 }
+
+/**
+ * 판매 채널 타입
+ */
+export type ProductChannel = 'wholesale' | 'retail';
