@@ -18,6 +18,7 @@ export default function BusinessProductsPage() {
   const [loading, setLoading] = useState(true);
   const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [processingId, setProcessingId] = useState<string | null>(null);
   const [channelFilter, setChannelFilter] = useState<ChannelFilter>('all');
 
   // 관리자이거나 사업자 인증된 경우 허용
@@ -63,6 +64,42 @@ export default function BusinessProductsPage() {
       alert('삭제 중 오류가 발생했습니다.');
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleMarkAsSold = async (productId: string) => {
+    if (!confirm('이 상품을 판매 완료로 처리하시겠습니까?')) return;
+
+    setProcessingId(productId);
+    try {
+      await ProductService.markAsSold(productId);
+      setProducts(prev => prev.map(p =>
+        p.id === productId ? { ...p, isSold: true, isAvailable: false } : p
+      ));
+      alert('판매 완료 처리되었습니다.');
+    } catch (error) {
+      console.error('Mark as sold error:', error);
+      alert('처리 중 오류가 발생했습니다.');
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleUnmarkAsSold = async (productId: string) => {
+    if (!confirm('이 상품을 다시 판매중으로 변경하시겠습니까?')) return;
+
+    setProcessingId(productId);
+    try {
+      await ProductService.unmarkAsSold(productId);
+      setProducts(prev => prev.map(p =>
+        p.id === productId ? { ...p, isSold: false, isAvailable: true } : p
+      ));
+      alert('판매중으로 변경되었습니다.');
+    } catch (error) {
+      console.error('Unmark as sold error:', error);
+      alert('처리 중 오류가 발생했습니다.');
+    } finally {
+      setProcessingId(null);
     }
   };
 
@@ -188,9 +225,13 @@ export default function BusinessProductsPage() {
                   </div>
                   <div className="absolute top-2 right-2">
                     <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                      product.isAvailable ? 'bg-blue-500 text-white' : 'bg-gray-500 text-white'
+                      product.isSold
+                        ? 'bg-purple-600 text-white'
+                        : product.isAvailable
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-500 text-white'
                     }`}>
-                      {product.isAvailable ? '판매중' : '판매중지'}
+                      {product.isSold ? '판매완료' : product.isAvailable ? '판매중' : '판매중지'}
                     </span>
                   </div>
                 </div>
@@ -203,20 +244,41 @@ export default function BusinessProductsPage() {
                     </span>
                     <span className="text-sm text-gray-500">재고 {product.quantity}개</span>
                   </div>
-                  <div className="mt-4 flex gap-2">
-                    <Link
-                      href={`/products/${product.id}/edit`}
-                      className="flex-1 text-center py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition"
-                    >
-                      수정
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(product.id)}
-                      disabled={deletingId === product.id}
-                      className="flex-1 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition disabled:opacity-50"
-                    >
-                      {deletingId === product.id ? '삭제중...' : '삭제'}
-                    </button>
+                  <div className="mt-4 space-y-2">
+                    {/* 판매 완료 / 다시 판매 버튼 */}
+                    {product.isSold ? (
+                      <button
+                        onClick={() => handleUnmarkAsSold(product.id)}
+                        disabled={processingId === product.id}
+                        className="w-full py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition disabled:opacity-50"
+                      >
+                        {processingId === product.id ? '처리중...' : '다시 판매하기'}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleMarkAsSold(product.id)}
+                        disabled={processingId === product.id}
+                        className="w-full py-2 bg-purple-50 text-purple-600 rounded-lg text-sm font-medium hover:bg-purple-100 transition disabled:opacity-50"
+                      >
+                        {processingId === product.id ? '처리중...' : '판매 완료'}
+                      </button>
+                    )}
+                    {/* 수정 / 삭제 버튼 */}
+                    <div className="flex gap-2">
+                      <Link
+                        href={`/products/${product.id}/edit`}
+                        className="flex-1 text-center py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition"
+                      >
+                        수정
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(product.id)}
+                        disabled={deletingId === product.id}
+                        className="flex-1 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition disabled:opacity-50"
+                      >
+                        {deletingId === product.id ? '삭제중...' : '삭제'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

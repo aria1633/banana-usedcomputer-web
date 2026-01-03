@@ -111,7 +111,9 @@ export default function ConsumerHomePage() {
                 <Link
                   key={product.id}
                   href={`/consumer/products/${product.id}`}
-                  className="bg-white rounded-2xl shadow-sm hover:shadow-lg overflow-hidden group border border-gray-100 transition-all"
+                  className={`bg-white rounded-2xl shadow-sm hover:shadow-lg overflow-hidden group border border-gray-100 transition-all ${
+                    product.isSold ? 'opacity-75' : ''
+                  }`}
                 >
                   <div className="aspect-video bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                     {product.imageUrls[0] && !imageErrors.has(product.id) ? (
@@ -119,7 +121,9 @@ export default function ConsumerHomePage() {
                         src={product.imageUrls[0]}
                         alt={product.title}
                         fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        className={`object-cover transition-transform duration-500 ${
+                          product.isSold ? 'grayscale' : 'group-hover:scale-110'
+                        }`}
                         unoptimized
                         onError={() => {
                           setImageErrors(prev => new Set(prev).add(product.id));
@@ -132,21 +136,35 @@ export default function ConsumerHomePage() {
                         </svg>
                       </div>
                     )}
+                    {/* 판매완료 오버레이 */}
+                    {product.isSold && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <span className="bg-gray-800 text-white text-sm font-bold px-4 py-2 rounded-full">
+                          판매완료
+                        </span>
+                      </div>
+                    )}
                     <div className="absolute top-3 left-3">
-                      <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                        판매중
+                      <span className={`text-white text-xs font-semibold px-3 py-1.5 rounded-full ${
+                        product.isSold ? 'bg-gray-500' : 'bg-green-500'
+                      }`}>
+                        {product.isSold ? '판매완료' : '판매중'}
                       </span>
                     </div>
                   </div>
                   <div className="p-5">
-                    <h3 className="font-bold text-lg text-gray-900 line-clamp-1 group-hover:text-amber-600 transition-colors">
+                    <h3 className={`font-bold text-lg line-clamp-1 transition-colors ${
+                      product.isSold ? 'text-gray-500' : 'text-gray-900 group-hover:text-amber-600'
+                    }`}>
                       {product.title}
                     </h3>
                     <p className="text-sm text-gray-600 line-clamp-2 mt-2 h-10 leading-relaxed">
                       {product.description}
                     </p>
                     <div className="mt-5 flex items-baseline gap-1">
-                      <span className="text-3xl font-extrabold text-amber-600">
+                      <span className={`text-3xl font-extrabold ${
+                        product.isSold ? 'text-gray-400 line-through' : 'text-amber-600'
+                      }`}>
                         {product.price.toLocaleString()}
                       </span>
                       <span className="text-lg font-medium text-gray-600">원</span>
@@ -161,7 +179,7 @@ export default function ConsumerHomePage() {
                         </span>
                       </div>
                       <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                        재고 {product.quantity}개
+                        {product.isSold ? '거래완료' : `재고 ${product.quantity}개`}
                       </span>
                     </div>
                   </div>
@@ -175,7 +193,9 @@ export default function ConsumerHomePage() {
                 <Link
                   key={product.id}
                   href={`/consumer/products/${product.id}`}
-                  className="bg-white rounded-xl shadow-sm active:scale-[0.98] transition-transform overflow-hidden border border-gray-100"
+                  className={`bg-white rounded-xl shadow-sm active:scale-[0.98] transition-transform overflow-hidden border border-gray-100 ${
+                    product.isSold ? 'opacity-75' : ''
+                  }`}
                 >
                   <div className="flex gap-4 p-3">
                     <div className="relative w-24 h-24 flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden">
@@ -184,7 +204,7 @@ export default function ConsumerHomePage() {
                           src={product.imageUrls[0]}
                           alt={product.title}
                           fill
-                          className="object-cover"
+                          className={`object-cover ${product.isSold ? 'grayscale' : ''}`}
                           unoptimized
                           onError={() => {
                             setImageErrors(prev => new Set(prev).add(product.id));
@@ -197,16 +217,28 @@ export default function ConsumerHomePage() {
                           </svg>
                         </div>
                       )}
+                      {/* 판매완료 오버레이 */}
+                      {product.isSold && (
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                          <span className="bg-gray-800 text-white text-[10px] font-bold px-2 py-1 rounded-full">
+                            판매완료
+                          </span>
+                        </div>
+                      )}
                       <div className="absolute top-1 left-1">
-                        <span className="bg-green-500 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
-                          판매중
+                        <span className={`text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
+                          product.isSold ? 'bg-gray-500' : 'bg-green-500'
+                        }`}>
+                          {product.isSold ? '완료' : '판매중'}
                         </span>
                       </div>
                     </div>
 
                     <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
                       <div>
-                        <h3 className="font-bold text-base text-gray-900 line-clamp-1 mb-1">
+                        <h3 className={`font-bold text-base line-clamp-1 mb-1 ${
+                          product.isSold ? 'text-gray-500' : 'text-gray-900'
+                        }`}>
                           {product.title}
                         </h3>
                         <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed mb-2">
@@ -216,7 +248,9 @@ export default function ConsumerHomePage() {
 
                       <div>
                         <div className="flex items-baseline gap-1 mb-2">
-                          <span className="text-xl font-extrabold text-amber-600">
+                          <span className={`text-xl font-extrabold ${
+                            product.isSold ? 'text-gray-400 line-through' : 'text-amber-600'
+                          }`}>
                             {product.price.toLocaleString()}
                           </span>
                           <span className="text-sm font-medium text-gray-600">원</span>
@@ -232,7 +266,7 @@ export default function ConsumerHomePage() {
                             </span>
                           </div>
                           <span className="text-[10px] font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">
-                            재고 {product.quantity}
+                            {product.isSold ? '거래완료' : `재고 ${product.quantity}`}
                           </span>
                         </div>
                       </div>

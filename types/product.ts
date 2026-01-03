@@ -241,6 +241,19 @@ export interface Product {
   updatedAt?: Date | null;
 
   /**
+   * 판매 완료 여부
+   *
+   * - true: 판매 완료된 상품 (거래 성사)
+   * - false 또는 undefined: 아직 판매되지 않음
+   * - 판매 완료 시 isAvailable도 false로 설정됨
+   * - "판매완료" 배지로 표시
+   *
+   * @type {boolean}
+   * @optional - 기존 데이터 호환성을 위해 optional (기본값: false)
+   */
+  isSold?: boolean;
+
+  /**
    * 판매 채널 구분
    *
    * - 'wholesale': 도매 커뮤니티 전용 (도매상끼리만 볼 수 있음)

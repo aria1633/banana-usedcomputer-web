@@ -93,13 +93,14 @@ export class ProductService {
 
   /**
    * 모든 상품 조회 (Read - Multiple)
+   * 판매중 또는 판매완료 상품 조회 (판매중지는 제외)
    */
   static async getAllProducts(): Promise<Product[]> {
     try {
       logger.info('Getting all products');
 
       const data = await get<any[]>(
-        `/rest/v1/${this.COLLECTION}?is_available=eq.true&order=created_at.desc`
+        `/rest/v1/${this.COLLECTION}?or=(is_available.eq.true,is_sold.eq.true)&order=created_at.desc`
       );
 
       logger.info('Fetched products', { count: data.length });
@@ -129,7 +130,9 @@ export class ProductService {
       try {
         logger.info('loadInitialData started');
 
-        let url = `/rest/v1/products?is_available=eq.true&order=created_at.desc`;
+        // 판매중(is_available=true) 또는 판매완료(is_sold=true) 상품 조회
+        // 판매중지(is_available=false AND is_sold=false)는 제외
+        let url = `/rest/v1/products?or=(is_available.eq.true,is_sold.eq.true)&order=created_at.desc`;
         if (sellerId) {
           url += `&seller_id=eq.${sellerId}`;
         }
@@ -189,6 +192,7 @@ export class ProductService {
       if (updates.isAvailable !== undefined)
         updateData.is_available = updates.isAvailable;
       if (updates.channel !== undefined) updateData.channel = updates.channel;
+      if (updates.isSold !== undefined) updateData.is_sold = updates.isSold;
 
       updateData.updated_at = new Date().toISOString();
 
@@ -329,13 +333,14 @@ export class ProductService {
   /**
    * 채널별 상품 조회
    * @param channel - 'wholesale' (도매) 또는 'retail' (소매)
+   * 판매중 또는 판매완료 상품 조회 (판매중지는 제외)
    */
   static async getProductsByChannel(channel: ProductChannel): Promise<Product[]> {
     try {
       logger.info('Getting products by channel', { channel });
 
       const data = await get<any[]>(
-        `/rest/v1/${this.COLLECTION}?channel=eq.${channel}&is_available=eq.true&order=created_at.desc`
+        `/rest/v1/${this.COLLECTION}?channel=eq.${channel}&or=(is_available.eq.true,is_sold.eq.true)&order=created_at.desc`
       );
 
       logger.info('Products by channel retrieved', { channel, count: data.length });
@@ -348,14 +353,61 @@ export class ProductService {
   }
 
   /**
+   * 상품을 판매 완료 상태로 변경
+   */
+  static async markAsSold(productId: string): Promise<void> {
+    try {
+      logger.info('Marking product as sold', { productId });
+
+      await patch(`/rest/v1/${this.COLLECTION}?id=eq.${productId}`, {
+        requireAuth: true,
+        body: JSON.stringify({
+          is_sold: true,
+          is_available: false,
+          updated_at: new Date().toISOString(),
+        }),
+      });
+
+      logger.info('Product marked as sold', { productId });
+    } catch (error) {
+      logger.error('markAsSold error', { error, productId });
+      throw new Error(`판매 완료 처리 실패: ${error}`);
+    }
+  }
+
+  /**
+   * 판매 완료 상태 취소 (다시 판매중으로)
+   */
+  static async unmarkAsSold(productId: string): Promise<void> {
+    try {
+      logger.info('Unmarking product as sold', { productId });
+
+      await patch(`/rest/v1/${this.COLLECTION}?id=eq.${productId}`, {
+        requireAuth: true,
+        body: JSON.stringify({
+          is_sold: false,
+          is_available: true,
+          updated_at: new Date().toISOString(),
+        }),
+      });
+
+      logger.info('Product unmarked as sold', { productId });
+    } catch (error) {
+      logger.error('unmarkAsSold error', { error, productId });
+      throw new Error(`판매 완료 취소 실패: ${error}`);
+    }
+  }
+
+  /**
    * 도매 커뮤니티용 - 모든 도매상 상품 조회 (다른 도매상 상품도 포함)
+   * 판매중 또는 판매완료 상품 조회 (판매중지는 제외)
    */
   static async getAllWholesaleProducts(): Promise<Product[]> {
     try {
       logger.info('Getting all wholesale products');
 
       const data = await get<any[]>(
-        `/rest/v1/${this.COLLECTION}?channel=eq.wholesale&is_available=eq.true&order=created_at.desc`
+        `/rest/v1/${this.COLLECTION}?channel=eq.wholesale&or=(is_available.eq.true,is_sold.eq.true)&order=created_at.desc`
       );
 
       logger.info('Wholesale products retrieved', { count: data.length });
@@ -369,13 +421,14 @@ export class ProductService {
 
   /**
    * 소매(일반 사용자) 커뮤니티용 - 소매 상품만 조회
+   * 판매중 또는 판매완료 상품 조회 (판매중지는 제외)
    */
   static async getAllRetailProducts(): Promise<Product[]> {
     try {
       logger.info('Getting all retail products');
 
       const data = await get<any[]>(
-        `/rest/v1/${this.COLLECTION}?channel=eq.retail&is_available=eq.true&order=created_at.desc`
+        `/rest/v1/${this.COLLECTION}?channel=eq.retail&or=(is_available.eq.true,is_sold.eq.true)&order=created_at.desc`
       );
 
       logger.info('Retail products retrieved', { count: data.length });
@@ -427,6 +480,7 @@ export class ProductService {
       isAvailable: data.is_available as boolean,
       createdAt: new Date(data.created_at as string),
       updatedAt: data.updated_at ? new Date(data.updated_at as string) : null,
+      isSold: (data.is_sold as boolean) || false,
       channel: (data.channel as 'wholesale' | 'retail') || 'wholesale',
     };
   }
